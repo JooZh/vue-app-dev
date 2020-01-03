@@ -48,7 +48,7 @@
 
 <script>
 // import Scroller from '../new/new-scroller.js'
-import Scroller from "../core/index";
+import Scroller from "../core/scroller";
 import Spinner from "./Spinner.vue";
 import Arrow from "./Arrow.vue";
 
