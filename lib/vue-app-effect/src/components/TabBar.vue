@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import {config} from '../util'
+import { config } from "../util";
 export default {
   name: "Tab-Bar",
   data() {

@@ -1,6 +1,7 @@
 import sendRequest from "./axios.js";
-import getApiHost from "./host";
-const { API_HOST } = getApiHost();
+// import getApiHost from "./host";
+// const { API_HOST } = getApiHost();
+import API_HOST from "./host";
 
 export const recommendNewAlbum = params => {
   return sendRequest({

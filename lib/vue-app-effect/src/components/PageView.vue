@@ -21,7 +21,7 @@ import Navigation from "./Navigation";
 export default {
   name: "Tab-Page-View",
   components: {
-    Navigation,
+    Navigation
   },
   props: {
     isTab: {

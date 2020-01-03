@@ -15,6 +15,21 @@ module.exports = {
       chunks: ["chunk-vendors", "chunk-common", "index"]
     }
   },
+  pwa: {
+    name: "My App",
+    themeColor: "#4DBA87",
+    msTileColor: "#000000",
+    appleMobileWebAppCapable: "yes",
+    appleMobileWebAppStatusBarStyle: "black-translucent"
+
+    // // 配置 workbox 插件
+    // workboxPluginMode: "InjectManifest",
+    // workboxOptions: {
+    //   // InjectManifest 模式下 swSrc 是必填的。
+    //   swSrc: "dev/sw.js"
+    //   // ...其它 Workbox 选项...
+    // }
+  },
   devServer: {
     port: 9001,
     before: function(app) {

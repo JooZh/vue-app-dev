@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import {config, getComponent} from '../util'
+import { config, getComponent } from "../util";
 export default {
   name: "App-Root",
   data() {

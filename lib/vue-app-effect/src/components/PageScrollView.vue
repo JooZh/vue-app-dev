@@ -40,7 +40,7 @@ import Navigation from "./Navigation";
 export default {
   name: "Tab-Page-View",
   components: {
-    Navigation,
+    Navigation
   },
   props: {
     isTab: {
@@ -48,8 +48,8 @@ export default {
       default: false,
       discription: "是否是tab页面"
     },
-    data:{
-      type: [Array,Object,Number],
+    data: {
+      type: [Array, Object, Number],
       discription: "监听数据"
     },
     title: {
