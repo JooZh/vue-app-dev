@@ -66,7 +66,7 @@
     <!-- 列表 -->
     <div class="singers-list">
       <ScrollView :scrollingY="true" :reachBottom="onPullingUp">
-        <div class="singers" v-if="singerlist.length > 0">
+        <div class="singers">
           <div
             class="singer"
             v-for="(item, index) in singerlist"
@@ -197,6 +197,7 @@ export default {
         this.page = this.page + 1;
         this.ready = true;
         this.loaded = true;
+
         if (this.init) {
           let timer = setTimeout(() => {
             this.initScrollWidth("genres");

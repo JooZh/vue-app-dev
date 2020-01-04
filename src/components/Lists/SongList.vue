@@ -49,11 +49,11 @@ export default {
   methods: {
     ...mapMutations(["playOne", "togglePlayer", "playAdd"]),
     // 点击播放
-    handlePlayOne(index) {
+    handlePlayOne() {
       // 添加到列表
-      this.playOne(this.data[index]);
+      // this.playOne(this.data[index]);
       // 打开播放器
-      this.togglePlayer();
+      // this.togglePlayer();
     },
     // 点击添加歌曲
     handleAddSong(index) {
