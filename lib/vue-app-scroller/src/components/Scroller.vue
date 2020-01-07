@@ -12,16 +12,16 @@
             >
                 <div class="refresh--content__icons">
                     <spinner
-                        v-if="refreshState == 2"
+                        v-if="refreshState === 2"
                         class="icon__spinner"
                         style="fill:#AAA;stroke:#AAA"
                     ></spinner>
                     <arrow v-else class="icon__arrow" fillColor="#AAA"></arrow>
                 </div>
                 <div class="refresh--content__texts">
-                    <span v-if="refreshState == 0" class="refresh__text">下拉刷新</span>
-                    <span v-else-if="refreshState == 1" class="refresh__text">立即刷新</span>
-                    <span v-else-if="refreshState == 2" class="refresh__text">正在刷新</span>
+                    <span v-if="refreshState === 0" class="refresh__text">下拉刷新</span>
+                    <span v-else-if="refreshState === 1" class="refresh__text">立即刷新</span>
+                    <span v-else-if="refreshState === 2" class="refresh__text">正在刷新</span>
                 </div>
             </div>
             <span v-else class="refresh-no"></span>
@@ -49,22 +49,30 @@ import Spinner from './Spinner.vue';
 import Arrow from './Arrow.vue';
 
 export default {
+    components: {
+        Spinner,
+        Arrow
+    },
     props: {
         data: {
             type: [Array, Object, Number],
-            description: '监听数据的变化'
+            description: '监听数据的变化',
+            default: () => {}
         },
         onScroll: {
             type: [Function],
-            description: '滚动事件处理函数'
+            description: '滚动事件处理函数',
+            default: () => {}
         },
         onPullRefresh: {
             type: Function,
-            description: '下拉刷新处理函数'
+            description: '下拉刷新处理函数',
+            default: () => {},
         },
         onReachBottom: {
             type: Function,
-            description: '上拉加载处理函数'
+            description: '上拉加载处理函数',
+            default: () => {}
         },
         scrollingX: {
             type: Boolean,
@@ -131,10 +139,6 @@ export default {
             default: (() => function() {})(),
             description: '选择完成后的回调'
         }
-    },
-    components: {
-        Spinner,
-        Arrow
     },
     data() {
         return {

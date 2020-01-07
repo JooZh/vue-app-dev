@@ -40,14 +40,10 @@
     "eslint": "^5.16.0",
     "eslint-config-djfe": "^2.0.1",
     "eslint-plugin-vue": "^5.0.0",
-    "lint-staged": "^9.4.3",
     "prettier": "1.18.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.10"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,vue}": [
