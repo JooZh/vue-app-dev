@@ -10,7 +10,7 @@
 //   }
 // };
 
-let host = window.location.origin + "/music/api";
+let host = window.location.origin + '/music/api';
 
 // const getApiHost = () => {
 //   let url = window.location.origin;

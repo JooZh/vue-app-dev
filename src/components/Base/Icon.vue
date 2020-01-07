@@ -1,14 +1,15 @@
 <template>
-  <Icon :type="type"></Icon>
+    <Icon :type="type"></Icon>
 </template>
 
 <script>
 export default {
-  props: {
-    type: {
-      type: String
+    props: {
+        type: {
+            type: String,
+            default: ''
+        }
     }
-  }
 };
 </script>
 

@@ -1,59 +1,59 @@
 <template>
-  <div class="tab border-half-bottom" v-show="show">
-    <div class="tab-list" :class="fixed ? 'fixed' : ''">
-      <div class="tab-list-item" @click="tabChange(0)">
-        <span :class="{ on: index == 0 }">单曲 {{ totals.song_total }}</span>
-      </div>
-      <div class="tab-list-item" @click="tabChange(1)">
-        <span :class="{ on: index == 1 }">专辑 {{ totals.album_total }}</span>
-      </div>
-      <div class="tab-list-item" @click="tabChange(2)">
-        <span :class="{ on: index == 2 }">MV {{ totals.mv_total }}</span>
-      </div>
+    <div v-show="show" class="tab border-half-bottom">
+        <div class="tab-list" :class="fixed ? 'fixed' : ''">
+            <div class="tab-list-item" @click="tabChange(0)">
+                <span :class="{ on: index === 0 }">单曲 {{totals.song_total}}</span>
+            </div>
+            <div class="tab-list-item" @click="tabChange(1)">
+                <span :class="{ on: index === 1 }">专辑 {{totals.album_total}}</span>
+            </div>
+            <div class="tab-list-item" @click="tabChange(2)">
+                <span :class="{ on: index === 2 }">MV {{totals.mv_total}}</span>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    index: {
-      type: Number,
-      default: 0
+    props: {
+        index: {
+            type: Number,
+            default: 0
+        },
+        fixed: {
+            type: Boolean,
+            default: false
+        },
+        show: {
+            type: Boolean,
+            default: true
+        },
+        total: {
+            type: Object,
+            default: () => {}
+        }
     },
-    fixed: {
-      type: Boolean,
-      default: false
+    data() {
+        return {
+            totals: {}
+        };
     },
-    show: {
-      type: Boolean,
-      default: true
+    watch: {
+        total: {
+            deep: true,
+            handler(val) {
+                this.totals = val;
+            }
+        }
     },
-    total: {
-      type: Object,
-      default: () => {}
+    methods: {
+        tabChange(index) {
+            this.$emit('tabChange', {
+                index: index
+            });
+        }
     }
-  },
-  watch: {
-    total: {
-      deep: true,
-      handler(val) {
-        this.totals = val;
-      }
-    }
-  },
-  data() {
-    return {
-      totals: {}
-    };
-  },
-  methods: {
-    tabChange(index) {
-      this.$emit("tabChange", {
-        index: index
-      });
-    }
-  }
 };
 </script>
 <style lang="stylus" scoped>

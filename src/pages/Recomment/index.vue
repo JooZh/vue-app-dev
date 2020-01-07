@@ -1,50 +1,50 @@
 <template>
-  <PageScrollView isTab>
-    <div class="container">
-      <!-- <Swiper :items="imageList"></!-->
-      <Mvlist :data="mvlist"></Mvlist>
-    </div>
-  </PageScrollView>
+    <PageScrollView isTab>
+        <div class="container">
+            <!-- <Swiper :items="imageList"></!-->
+            <Mvlist :data="mvlist"></Mvlist>
+        </div>
+    </PageScrollView>
 </template>
 
 <script>
-import Mvlist from "@/components/Lists/MvList";
-import { recommendMvList } from "@/service/api";
+import Mvlist from '@/components/Lists/MvList';
+import { recommendMvList } from '@/service/api';
 export default {
-  name: "recomment",
-  components: {
-    Mvlist
-  },
-  data() {
-    return {
-      showLoading: false,
-      // 路由使用
-      headerTitle: "推荐",
-      imageList: [],
-      mvlist: [],
-      // 滑动控制
-      current: 0,
-      timer: null,
-      startX: 0,
-      startY: 0
-    };
-  },
-  mounted() {
-    this.getData();
-  },
-  methods: {
-    onPullingDown() {
-      this.showLoading = true;
-      setTimeout(() => {
-        this.getData();
-      }, 1000);
+    name: 'recomment',
+    components: {
+        Mvlist
     },
-    getData() {
-      recommendMvList().then(res => {
-        this.mvlist = res.mv_list;
-      });
+    data() {
+        return {
+            showLoading: false,
+            // 路由使用
+            headerTitle: '推荐',
+            imageList: [],
+            mvlist: [],
+            // 滑动控制
+            current: 0,
+            timer: null,
+            startX: 0,
+            startY: 0
+        };
+    },
+    mounted() {
+        this.getData();
+    },
+    methods: {
+        onPullingDown() {
+            this.showLoading = true;
+            setTimeout(() => {
+                this.getData();
+            }, 1000);
+        },
+        getData() {
+            recommendMvList().then(res => {
+                this.mvlist = res.mv_list;
+            });
+        }
     }
-  }
 };
 </script>
 

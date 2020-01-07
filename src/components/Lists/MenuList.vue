@@ -1,63 +1,62 @@
 <template>
-  <div class="lists">
-    <div class="list" v-for="(item, index) in menulist" :key="index">
-      <div class="detail" @click="goDetail(item.dissid, item.dissname)">
-        <img
-          class="img"
-          v-lazy="{ src: item.pic, error: defaultImg, loading: defaultImg }"
-        />
-        <div class="title-box">
-          <div class="title">{{ item.dissname }}</div>
+    <div class="lists">
+        <div v-for="(item, index) in menulist" :key="index" class="list">
+            <div class="detail" @click="goDetail(item.dissid, item.dissname)">
+                <img
+                    v-lazy="{ src: item.pic, error: defaultImg, loading: defaultImg }"
+                    class="img"
+                />
+                <div class="title-box">
+                    <div class="title">{{item.dissname}}</div>
+                </div>
+                <div class="name-box">
+                    <div class="name">{{item.creator_name}}</div>
+                </div>
+                <div class="date">
+                    <Icon type="ios-headset" /> {{item.listen_count}} 万
+                </div>
+            </div>
         </div>
-        <div class="name-box">
-          <div class="name">{{ item.creator_name }}</div>
-        </div>
-        <div class="date">
-          <Icon type="ios-headset" /> {{ item.listen_count }} 万
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    menulist: {
-      type: Array,
-      description: "歌单列表"
-    }
-  },
-  data() {
-    return {
-      defaultImg: require("@/assets/images/album.png")
-    };
-  },
-  methods: {
-    goDetail(dissid, dissname) {
-      let newPath = `/menu/${dissid}`;
-      let newRoute = [
-        {
-          path: newPath,
-          name: newPath,
-          component: { extends: this.$router.extends.MenuDetail }
+    props: {
+        menulist: {
+            type: Array,
+            description: '歌单列表',
+            default: () => []
         }
-      ];
-      // 判断路由是否存在 不存在 添加一个新路由
-      let find = this.$router.options.routes.findIndex(
-        item => item.path === newPath
-      );
-      if (find === -1) {
-        this.$router.options.routes.push(newRoute[0]);
-        this.$router.addRoutes(newRoute);
-      }
-      // 存在直接跳转到路由
-      this.$router.push({
-        name: newPath,
-        params: { id: dissid, title: dissname }
-      });
+    },
+    data() {
+        return {
+            defaultImg: require('@/assets/images/album.png')
+        };
+    },
+    methods: {
+        goDetail(dissid, dissname) {
+            let newPath = `/menu/${dissid}`;
+            let newRoute = [
+                {
+                    path: newPath,
+                    name: newPath,
+                    component: { extends: this.$router.extends.MenuDetail }
+                }
+            ];
+            // 判断路由是否存在 不存在 添加一个新路由
+            let find = this.$router.options.routes.findIndex(item => item.path === newPath);
+            if (find === -1) {
+                this.$router.options.routes.push(newRoute[0]);
+                this.$router.addRoutes(newRoute);
+            }
+            // 存在直接跳转到路由
+            this.$router.push({
+                name: newPath,
+                params: { id: dissid, title: dissname }
+            });
+        }
     }
-  }
 };
 </script>
 

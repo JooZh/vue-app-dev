@@ -1,42 +1,43 @@
 <template>
-  <div id="mvlist" class="mvlist">
-    <div class="list" v-for="(item, index) in data" :key="index">
-      <div class="detail" @click="getPlay(index)">
-        <img
-          ref="img"
-          class="img"
-          v-lazy="{ src: item.mv_pic, error: defaultImg, loading: defaultImg }"
-        />
-        <div class="title-box">
-          <div class="title">{{ item.mv_title }}</div>
+    <div id="mvlist" class="mvlist">
+        <div v-for="(item, index) in data" :key="index" class="list">
+            <div class="detail" @click="getPlay(index)">
+                <img
+                    ref="img"
+                    v-lazy="{ src: item.mv_pic, error: defaultImg, loading: defaultImg }"
+                    class="img"
+                />
+                <div class="title-box">
+                    <div class="title">{{item.mv_title}}</div>
+                </div>
+                <div class="date"><Icon type="ios-videocam" /> {{item.play_str}}</div>
+            </div>
         </div>
-        <div class="date"><Icon type="ios-videocam" /> {{ item.play_str }}</div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    data: {
-      type: Array
+    props: {
+        data: {
+            type: Array,
+            default: () => []
+        }
+    },
+    data() {
+        return {
+            defaultImg: require('@/assets/images/mv.png')
+        };
+    },
+    methods: {
+        getPlay(index) {
+            let data = this.data[index];
+            this.$vueAppEffect.next({
+                path: `/pages/MvPlayer/index`,
+                params: { mid: data.mv_mid }
+            });
+        }
     }
-  },
-  data() {
-    return {
-      defaultImg: require("@/assets/images/mv.png")
-    };
-  },
-  methods: {
-    getPlay(index) {
-      let data = this.data[index];
-      this.$vueAppEffect.next({
-        path: `/pages/MvPlayer/index`,
-        params: { mid: data.mv_mid }
-      });
-    }
-  }
 };
 </script>
 

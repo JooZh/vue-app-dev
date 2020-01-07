@@ -1,96 +1,96 @@
 <template>
-  <PageScrollView :title="headerTitle" :onScroll="onScroll">
-    <div id="ranking-list">
-      <div class="container">
-        <div id="infos" class="infos">
-          <div class="singer-bg">
-            <img
-              class="background"
-              v-lazy="{ src: img, error: defaultImg, loading: defaultImg }"
-            />
-          </div>
-          <div class="info-content">
-            <img
-              class="min-avatar"
-              v-lazy="{ src: img, error: defaultImg, loading: defaultImg }"
-            />
-            <div class="info">
-              <div class="name">{{ topInfo.pts }}</div>
-              <div class="fans">{{ topInfo.listen_str }} 粉丝</div>
-              <div class="fans">{{ topInfo.update_time }} 更新</div>
+    <PageScrollView :title="headerTitle" :onScroll="onScroll">
+        <div id="ranking-list">
+            <div class="container">
+                <div id="infos" class="infos">
+                    <div class="singer-bg">
+                        <img
+                            v-lazy="{ src: img, error: defaultImg, loading: defaultImg }"
+                            class="background"
+                        />
+                    </div>
+                    <div class="info-content">
+                        <img
+                            v-lazy="{ src: img, error: defaultImg, loading: defaultImg }"
+                            class="min-avatar"
+                        />
+                        <div class="info">
+                            <div class="name">{{topInfo.pts}}</div>
+                            <div class="fans">{{topInfo.listen_str}} 粉丝</div>
+                            <div class="fans">{{topInfo.update_time}} 更新</div>
+                        </div>
+                    </div>
+                </div>
+                <TabPosition
+                    :show="true"
+                    :total="topInfo.total"
+                    @playAll="handlePlayAll"
+                />
+                <SongList :data="songlist"></SongList>
             </div>
-          </div>
         </div>
         <TabPosition
-          @playAll="handlePlayAll"
-          :show="true"
-          :total="topInfo.total"
+            slot="position"
+            :total="topInfo.total"
+            :show="fixed"
+            :fixed="fixed"
+            @playAll="handlePlayAll"
         />
-        <SongList :data="songlist"></SongList>
-      </div>
-    </div>
-    <TabPosition
-      slot="position"
-      @playAll="handlePlayAll"
-      :total="topInfo.total"
-      :show="fixed"
-      :fixed="fixed"
-    />
-  </PageScrollView>
+    </PageScrollView>
 </template>
 
 <script>
-import SongList from "@/components/Lists/SongList";
-import TabPosition from "./tabPosition";
+import SongList from '@/components/Lists/SongList';
+import TabPosition from './tabPosition';
 
-import { topDetail } from "@/service/api";
-import { mapMutations } from "vuex";
+import { topDetail } from '@/service/api';
+import { mapMutations } from 'vuex';
 
 export default {
-  name: "ranking-detail",
-  components: {
-    SongList,
-    TabPosition
-  },
-  data() {
-    return {
-      tabTop: 220,
-      headerTitle: "",
-      img: "",
+    name: 'ranking-detail',
+    components: {
+        SongList,
+        TabPosition
+    },
+    data() {
+        return {
+            tabTop: 220,
+            headerTitle: '',
+            img: '',
 
-      fixed: false,
-      songlist: [],
-      topInfo: {},
-      defaultImg: require("@/assets/images/album.png")
-    };
-  },
-  mounted() {
-    let id = this.$route.params.id;
-    this.headerTitle = this.$route.params.title;
-    this.img = this.$route.params.img;
-    // 获取当前页面高度
-    this.getMusicList(id);
-  },
-  methods: {
-    ...mapMutations(["playAll"]),
-    handlePlayAll() {
-      this.playAll(this.songlist);
+            fixed: false,
+            songlist: [],
+            topInfo: {},
+            defaultImg: require('@/assets/images/album.png')
+        };
     },
-    onScroll(pos) {
-      this.fixed = this.tabTop - pos.y <= 0;
+    mounted() {
+        let id = this.$route.params.id;
+        this.headerTitle = this.$route.params.title;
+        this.img = this.$route.params.img;
+        // 获取当前页面高度
+        this.getMusicList(id);
     },
-    // 获取单曲数据
-    getMusicList(id) {
-      topDetail({ top_id: id }).then(res => {
-        let topInfo = res;
-        topInfo.pts = `第${topInfo.week}周`;
-        this.topInfo = topInfo;
-        this.songlist = res.song_list;
-        // 吸顶效果
-        // this.tabTop = this.$refs.tab.getBoundingClientRect().top - 40
-      });
+    methods: {
+        ...mapMutations(['playAll']),
+        handlePlayAll() {
+            this.playAll(this.songlist);
+        },
+        onScroll(pos) {
+            this.fixed = this.tabTop - pos.y <= 0;
+        },
+        // 获取单曲数据
+        getMusicList(id) {
+            topDetail({ top_id: id }).then(res => {
+                let topInfo = res;
+                topInfo.pts = `第${topInfo.week}周`;
+                this.topInfo = topInfo;
+                this.songlist = res.song_list;
+                // 吸顶效果
+                // this.tabTop = this.$refs.tab.getBoundingClientRect().top - 40
+            });
+        }
     }
-  }
 };
 </script>
 

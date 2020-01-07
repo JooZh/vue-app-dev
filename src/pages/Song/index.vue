@@ -1,32 +1,38 @@
 <template>
-  <PageScrollView
-    isTab
-    title="song"
-    :pullRefresh="pullRefresh"
-    :reachBottom="reachBottom"
-    :onScroll="onScroll"
-  >
-    <div>sfafaf</div>
-    <div class="num" slot="position">{{ y }}</div>
-  </PageScrollView>
+    <PageScrollView
+        isTab
+        title="song"
+        :pullRefresh="pullRefresh"
+        :reachBottom="reachBottom"
+        :onScroll="onScroll"
+    >
+        <div>sfafaf</div>
+        <div slot="position" class="num">{{y}}</div>
+    </PageScrollView>
 </template>
 
 <script>
 export default {
-  name: "song",
-  data() {
-    return {
-      y: 0
-    };
-  },
-  mounted() {},
-  methods: {
-    pullRefresh() {},
-    reachBottom() {},
-    onScroll(e) {
-      this.y = e.y;
+    name: 'song',
+    data() {
+        return {
+            y: 0
+        };
+    },
+    mounted() {
+        //
+    },
+    methods: {
+        pullRefresh() {
+            //
+        },
+        reachBottom() {
+            //
+        },
+        onScroll(e) {
+            this.y = e.y;
+        }
     }
-  }
 };
 </script>
 

@@ -1,66 +1,65 @@
 <template>
-  <PageScrollView isTab>
-    <div class="container">
-      <div class="list-warpper" v-for="(item, index) in toplist" :key="index">
-        <div
-          class="list"
-          @click="goDetail(item.top_id, item.top_title, item.top_pic)"
-        >
-          <div class="img"><img :src="item.top_pic" /></div>
-          <div class="info">
-            <div class="title text-line">
-              <span class="pix">{{ item.top_title }}</span>
+    <PageScrollView isTab>
+        <div class="container">
+            <div v-for="(item, index) in toplist" :key="index" class="list-warpper">
+                <div
+                    class="list"
+                    @click="goDetail(item.top_id, item.top_title, item.top_pic)"
+                >
+                    <div class="img"><img :src="item.top_pic" /></div>
+                    <div class="info">
+                        <div class="title text-line">
+                            <span class="pix">{{item.top_title}}</span>
+                        </div>
+                        <div
+                            v-for="(value, key) in item.song_list"
+                            :key="key"
+                            class="name-list text-line"
+                        >
+                            <div class="pix">
+                                {{key + 1}}<span class="color-h"> {{value.song_name}}</span> -
+                                {{value.singer_name}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="v"></div>
+                    </div>
+                </div>
             </div>
-            <div
-              class="name-list text-line"
-              v-for="(value, key) in item.song_list"
-              :key="key"
-            >
-              <div class="pix">
-                {{ key + 1
-                }}<span class="color-h"> {{ value.song_name }}</span> -
-                {{ value.singer_name }}
-              </div>
-            </div>
-          </div>
-          <div class="right">
-            <div class="v"></div>
-          </div>
         </div>
-      </div>
-    </div>
-  </PageScrollView>
+    </PageScrollView>
 </template>
 
 <script>
-import { topList } from "@/service/api";
+import { topList } from '@/service/api';
 export default {
-  name: "ranking",
-  data() {
-    return {
-      toplist: []
-    };
-  },
-  mounted() {
-    this.getData();
-  },
-  methods: {
-    goDetail(id, title, img) {
-      this.$vueAppEffect.next({
-        path: `/pages/RankDetail/index`,
-        params: {
-          id: id,
-          title: title,
-          img: img
-        }
-      });
+    name: 'ranking',
+    data() {
+        return {
+            toplist: []
+        };
     },
-    getData() {
-      topList().then(res => {
-        this.toplist = res;
-      });
+    mounted() {
+        this.getData();
+    },
+    methods: {
+        goDetail(id, title, img) {
+            this.$vueAppEffect.next({
+                path: `/pages/RankDetail/index`,
+                params: {
+                    id: id,
+                    title: title,
+                    img: img
+                }
+            });
+        },
+        getData() {
+            topList().then(res => {
+                this.toplist = res;
+            });
+        }
     }
-  }
 };
 </script>
 

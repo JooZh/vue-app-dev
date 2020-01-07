@@ -1,150 +1,151 @@
 <template>
-  <PageView>
-    <div class="mv-player">
-      <div class="container">
-        <div class="back" @click="back"><Icon type="ios-arrow-back" /></div>
-        <div class="video-box">
-          <video
-            class="video"
-            :poster="mvInfo.mv_pic"
-            controls
-            ref="video"
-            playsinline=""
-            webkit-playsinline=""
-            :src="playUrl"
-          ></video>
-        </div>
-        <div class="video-info  border-half-bottom">
-          <div class="title">{{ mvInfo.name }}</div>
-          <div class="count">
-            <Icon type="ios-videocam" /> {{ mvInfo.play_str }}
-          </div>
-        </div>
-        <div class="head">大部分人还爱看</div>
-        <div
-          class="swiper"
-          @touchstart="swiperTouchStr($event)"
-          @touchend="swiperTouchEnd($event)"
-        >
-          <div
-            class="swiper-item"
-            v-for="(value, key) in otherList"
-            :key="key"
-            :style="{ transform: `translate(${key - current}00%,0)` }"
-          >
-            <template v-if="value.length == 3">
-              <div class="item" v-for="(item, index) in value" :key="index">
-                <img
-                  :src="item.mv_pic"
-                  alt=""
-                  @click="changePlay(item.mv_mid)"
-                />
-                <div class="title text-line">
-                  <span class="pix">{{ item.mv_name }}</span>
+    <PageView>
+        <div class="mv-player">
+            <div class="container">
+                <div class="back" @click="back"><Icon type="ios-arrow-back" /></div>
+                <div class="video-box">
+                    <video
+                        ref="video"
+                        class="video"
+                        :poster="mvInfo.mv_pic"
+                        controls
+                        playsinline=""
+                        webkit-playsinline=""
+                        :src="playUrl"
+                    ></video>
                 </div>
-                <div class="date">
-                  <Icon type="ios-videocam" /> {{ item.play_str }}
+                <div class="video-info  border-half-bottom">
+                    <div class="title">{{mvInfo.name}}</div>
+                    <div class="count">
+                        <Icon type="ios-videocam" /> {{mvInfo.play_str}}
+                    </div>
                 </div>
-              </div>
-            </template>
-          </div>
-          <div class="dots">
-            <div
-              class="dot"
-              v-for="(value, index) in otherList"
-              :class="current == index ? 'active' : ''"
-              :key="index"
-            ></div>
-          </div>
+                <div class="head">大部分人还爱看</div>
+                <div
+                    class="swiper"
+                    @touchstart="swiperTouchStr($event)"
+                    @touchend="swiperTouchEnd($event)"
+                >
+                    <div
+                        v-for="(value, key) in otherList"
+                        :key="key"
+                        class="swiper-item"
+                        :style="{ transform: `translate(${key - current}00%,0)` }"
+                    >
+                        <template v-if="value.length === 3">
+                            <div v-for="(item, index) in value" :key="index" class="item">
+                                <img
+                                    :src="item.mv_pic"
+                                    alt=""
+                                    @click="changePlay(item.mv_mid)"
+                                />
+                                <div class="title text-line">
+                                    <span class="pix">{{item.mv_name}}</span>
+                                </div>
+                                <div class="date">
+                                    <Icon type="ios-videocam" /> {{item.play_str}}
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="dots">
+                        <div
+                            v-for="(value, index) in otherList"
+                            :key="index"
+                            class="dot"
+                            :class="current === index ? 'active' : ''"
+                        ></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </PageView>
+    </PageView>
 </template>
 <script>
-import { recommendMvDetailAll } from "@/service/api";
+import { recommendMvDetailAll } from '@/service/api';
 export default {
-  name: "mv-player",
-  data() {
-    return {
-      video: null,
-      mvInfo: {},
-      playUrl: "",
-      otherList: [],
+    name: 'mv-player',
+    data() {
+        return {
+            video: null,
+            mvInfo: {},
+            playUrl: '',
+            otherList: [],
 
-      current: 0,
-      timer: null,
-      startX: 0,
-      startY: 0
-    };
-  },
-  mounted() {
-    this.playMvData = this.$route.params.data;
-    this.video = this.$refs.video;
-    this.getData(this.$route.params.mid);
-  },
-  methods: {
-    back() {
-      this.$vueAppEffect.back();
+            current: 0,
+            timer: null,
+            startX: 0,
+            startY: 0
+        };
     },
-    changePlay(mid) {
-      this.$refs.video.pause();
-      this.getData(mid);
+    mounted() {
+        this.playMvData = this.$route.params.data;
+        this.video = this.$refs.video;
+        this.getData(this.$route.params.mid);
     },
-    getData(mid) {
-      recommendMvDetailAll({ mv_mid: mid }).then(res => {
-        this.playUrl = res.recommend_url;
-        this.mvInfo = res.mv_info;
-        this.otherList = this.subArr(res.other_list);
-        setTimeout(() => {
-          this.video = this.$refs.video;
-          this.$refs.video.play();
-        }, 200);
-      });
+    destroyed() {
+        clearInterval(this.timer);
     },
-    // 分隔成三个一组
-    subArr(data) {
-      let subArrayNum = 3;
-      let dataArr = new Array(Math.ceil(data.length / subArrayNum));
-      for (let i = 0; i < dataArr.length; i++) {
-        dataArr[i] = [];
-        for (let j = 0; j < subArrayNum; j++) {
-          dataArr[i][j] = "";
+    methods: {
+        back() {
+            this.$vueAppEffect.back();
+        },
+        changePlay(mid) {
+            this.$refs.video.pause();
+            this.getData(mid);
+        },
+        getData(mid) {
+            recommendMvDetailAll({ mv_mid: mid }).then(res => {
+                this.playUrl = res.recommend_url;
+                this.mvInfo = res.mv_info;
+                this.otherList = this.subArr(res.other_list);
+                setTimeout(() => {
+                    this.video = this.$refs.video;
+                    this.$refs.video.play();
+                }, 200);
+            });
+        },
+        // 分隔成三个一组
+        subArr(data) {
+            let subArrayNum = 3;
+            let dataArr = new Array(Math.ceil(data.length / subArrayNum));
+            for (let i = 0; i < dataArr.length; i++) {
+                dataArr[i] = [];
+                for (let j = 0; j < subArrayNum; j++) {
+                    dataArr[i][j] = '';
+                }
+            }
+            for (let i = 0; i < data.length; i++) {
+                // eslint-disable-next-line radix
+                dataArr[parseInt(i / subArrayNum)][i % subArrayNum] = data[i];
+            }
+            return dataArr;
+        },
+        swiperTouchStr(e) {
+            clearInterval(this.timer);
+            this.startX = e.changedTouches[0].pageX;
+            this.startY = e.changedTouches[0].pageY;
+        },
+        swiperTouchEnd(e) {
+            let x = e.changedTouches[0].pageX - this.startX;
+            let y = e.changedTouches[0].pageY - this.startY;
+            if (Math.abs(x) > Math.abs(y) && x > 0) {
+                if (this.current !== 0) {
+                    this.current -= 1;
+                }
+            } else if (Math.abs(x) > Math.abs(y) && x < 0) {
+                if (this.current < this.otherList.length - 1) {
+                    this.current += 1;
+                }
+            } else if (Math.abs(y) > Math.abs(x) && y > 0) {
+                //
+            } else if (Math.abs(y) > Math.abs(x) && y < 0) {
+                //
+            } else {
+                //
+            }
         }
-      }
-      for (let i = 0; i < data.length; i++) {
-        dataArr[parseInt(i / subArrayNum)][i % subArrayNum] = data[i];
-      }
-      return dataArr;
-    },
-    swiperTouchStr(e) {
-      clearInterval(this.timer);
-      this.startX = e.changedTouches[0].pageX;
-      this.startY = e.changedTouches[0].pageY;
-    },
-    swiperTouchEnd(e) {
-      let x = e.changedTouches[0].pageX - this.startX;
-      let y = e.changedTouches[0].pageY - this.startY;
-      if (Math.abs(x) > Math.abs(y) && x > 0) {
-        if (this.current !== 0) {
-          this.current -= 1;
-        }
-      } else if (Math.abs(x) > Math.abs(y) && x < 0) {
-        if (this.current < this.otherList.length - 1) {
-          this.current += 1;
-        }
-      } else if (Math.abs(y) > Math.abs(x) && y > 0) {
-        //
-      } else if (Math.abs(y) > Math.abs(x) && y < 0) {
-        //
-      } else {
-        //
-      }
     }
-  },
-  destroyed() {
-    clearInterval(this.timer);
-  }
 };
 </script>
 <style lang="stylus" scoped>

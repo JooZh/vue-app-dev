@@ -1,8 +1,8 @@
 <template>
-  <div id="loading">
-    <div class="loading"></div>
-    <div class="text">加载中...</div>
-  </div>
+    <div id="loading">
+        <div class="loading"></div>
+        <div class="text">加载中...</div>
+    </div>
 </template>
 
 <script>

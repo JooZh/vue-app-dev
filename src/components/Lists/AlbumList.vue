@@ -1,43 +1,44 @@
 <template>
-  <div class="lists">
-    <div class="list" v-for="(item, index) in data" :key="index">
-      <div class="detail" @click="getDetail(item.album_mid, item.album_name)">
-        <img
-          class="img"
-          v-lazy="{
-            src: item.album_pic,
-            error: defaultImg,
-            loading: defaultImg
-          }"
-        />
-        <div class="title">{{ item.album_name }}</div>
-        <div class="date">{{ item.pub_time }}</div>
-      </div>
+    <div class="lists">
+        <div v-for="(item, index) in data" :key="index" class="list">
+            <div class="detail" @click="getDetail(item.album_mid, item.album_name)">
+                <img
+                    v-lazy="{
+                        src: item.album_pic,
+                        error: defaultImg,
+                        loading: defaultImg
+                    }"
+                    class="img"
+                />
+                <div class="title">{{item.album_name}}</div>
+                <div class="date">{{item.pub_time}}</div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    data: {
-      type: Array,
-      description: "专辑列表"
+    props: {
+        data: {
+            type: Array,
+            description: '专辑列表',
+            default: () => []
+        }
+    },
+    data() {
+        return {
+            defaultImg: require('@/assets/images/album.png')
+        };
+    },
+    methods: {
+        getDetail(mid, title) {
+            this.$vueAppEffect.next({
+                path: `/pages/AlbumDetail/index`,
+                params: { id: mid, title: title }
+            });
+        }
     }
-  },
-  data() {
-    return {
-      defaultImg: require("@/assets/images/album.png")
-    };
-  },
-  methods: {
-    getDetail(mid, title) {
-      this.$vueAppEffect.next({
-        path: `/pages/AlbumDetail/index`,
-        params: { id: mid, title: title }
-      });
-    }
-  }
 };
 </script>
 

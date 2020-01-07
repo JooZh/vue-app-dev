@@ -1,103 +1,103 @@
 <template>
-  <PageScrollView :title="headerTitle" :onScroll="onScroll">
-    <div class="menu-detail">
-      <div id="infos" class="infos">
-        <div class="singer-bg">
-          <img
-            class="background"
-            v-lazy="{
-              src: albumInfo.img,
-              error: defaultImg,
-              loading: defaultImg
-            }"
-          />
+    <PageScrollView :title="headerTitle" :onScroll="onScroll">
+        <div class="menu-detail">
+            <div id="infos" class="infos">
+                <div class="singer-bg">
+                    <img
+                        v-lazy="{
+                            src: albumInfo.img,
+                            error: defaultImg,
+                            loading: defaultImg
+                        }"
+                        class="background"
+                    />
+                </div>
+                <div class="info-content">
+                    <img
+                        v-lazy="{
+                            src: albumInfo.img,
+                            error: defaultImg,
+                            loading: defaultImg
+                        }"
+                        class="min-avatar"
+                    />
+                    <div class="info">
+                        <div class="name">{{albumInfo.album_name}}</div>
+                        <div class="fans">{{albumInfo.singer_name}}</div>
+                        <div class="fans">流派: {{albumInfo.genre}}</div>
+                        <div class="fans">发行时间: {{albumInfo.time}}</div>
+                    </div>
+                </div>
+            </div>
+            <TabPosition
+                :total="albumInfo.total"
+                :show="true"
+                @playAll="handlePlayAll"
+            />
+            <SongList :data="songlist"></SongList>
         </div>
-        <div class="info-content">
-          <img
-            class="min-avatar"
-            v-lazy="{
-              src: albumInfo.img,
-              error: defaultImg,
-              loading: defaultImg
-            }"
-          />
-          <div class="info">
-            <div class="name">{{ albumInfo.album_name }}</div>
-            <div class="fans">{{ albumInfo.singer_name }}</div>
-            <div class="fans">流派: {{ albumInfo.genre }}</div>
-            <div class="fans">发行时间: {{ albumInfo.time }}</div>
-          </div>
-        </div>
-      </div>
-      <TabPosition
-        @playAll="handlePlayAll"
-        :total="albumInfo.total"
-        :show="true"
-      />
-      <SongList :data="songlist"></SongList>
-    </div>
-    <TabPosition
-      slot="position"
-      @playAll="handlePlayAll"
-      :total="albumInfo.total"
-      :show="fixed"
-      :fixed="fixed"
-    />
-  </PageScrollView>
+        <TabPosition
+            slot="position"
+            :total="albumInfo.total"
+            :show="fixed"
+            :fixed="fixed"
+            @playAll="handlePlayAll"
+        />
+    </PageScrollView>
 </template>
 
 <script>
-import SongList from "@/components/Lists/SongList";
-import TabPosition from "./tabPosition";
+import SongList from '@/components/Lists/SongList';
+import TabPosition from './tabPosition';
 
-import { AlbumDetail } from "@/service/api";
-import { mapMutations } from "vuex";
+import { AlbumDetail } from '@/service/api';
+import { mapMutations } from 'vuex';
 export default {
-  name: "album-detail",
-  components: {
-    SongList,
-    TabPosition
-  },
-  data() {
-    return {
-      tabTop: 230,
-      headerTitle: "",
-      img: "",
+    name: 'album-detail',
+    components: {
+        SongList,
+        TabPosition
+    },
+    data() {
+        return {
+            tabTop: 230,
+            headerTitle: '',
+            img: '',
 
-      fixed: false,
-      songlist: [],
-      albumInfo: {},
-      defaultImg: require("@/assets/images/album.png")
-    };
-  },
-  mounted() {
-    // 获取参数
-    let mid = this.$route.params.id;
-    this.headerTitle = this.$route.params.title;
-    // 获取当前页面高度
-    this.getMusicList(mid);
-  },
-  methods: {
-    ...mapMutations(["playAll"]),
-    handlePlayAll() {
-      this.playAll(this.songlist);
+            fixed: false,
+            songlist: [],
+            albumInfo: {},
+            defaultImg: require('@/assets/images/album.png')
+        };
     },
-    onScroll(pos) {
-      this.fixed = this.tabTop - pos.y <= 0;
+    mounted() {
+        // 获取参数
+        let mid = this.$route.params.id;
+        this.headerTitle = this.$route.params.title;
+        // 获取当前页面高度
+        this.getMusicList(mid);
     },
-    // 获取单曲数据
-    getMusicList(mid) {
-      AlbumDetail({
-        album_mid: mid
-      }).then(res => {
-        // topInfo.img = this.X.img(topInfo.mid, 2)
-        this.albumInfo = res;
-        this.songlist = res.list;
-        // 吸顶效果
-        // this.tabTop = this.$refs.tab.getBoundingClientRect().top - 40
-      });
+    methods: {
+        ...mapMutations(['playAll']),
+        handlePlayAll() {
+            this.playAll(this.songlist);
+        },
+        onScroll(pos) {
+            this.fixed = this.tabTop - pos.y <= 0;
+        },
+        // 获取单曲数据
+        getMusicList(mid) {
+            AlbumDetail({
+                album_mid: mid
+            }).then(res => {
+                // topInfo.img = this.X.img(topInfo.mid, 2)
+                this.albumInfo = res;
+                this.songlist = res.list;
+                // 吸顶效果
+                // this.tabTop = this.$refs.tab.getBoundingClientRect().top - 40
+            });
+        }
     }
-  }
 };
 </script>
 

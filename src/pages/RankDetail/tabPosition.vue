@@ -1,41 +1,41 @@
 <template>
-  <div
-    class="tab border-half-bottom"
-    :class="{ 'border-half-top': fixed }"
-    v-show="show"
-  >
-    <div class="tab-list" :class="{ fixed: fixed }">
-      <div class="tab-list-item left">
-        <span class="left">排行榜共 {{ total }} 首</span>
-      </div>
-      <div class="tab-list-item right">
-        <span class="right" @click="handlePlayAll">全部播放</span>
-      </div>
+    <div
+        v-show="show"
+        class="tab border-half-bottom"
+        :class="{ 'border-half-top': fixed }"
+    >
+        <div class="tab-list" :class="{ fixed: fixed }">
+            <div class="tab-list-item left">
+                <span class="left">排行榜共 {{total}} 首</span>
+            </div>
+            <div class="tab-list-item right">
+                <span class="right" @click="handlePlayAll">全部播放</span>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    fixed: {
-      type: Boolean,
-      default: false
+    props: {
+        fixed: {
+            type: Boolean,
+            default: false
+        },
+        show: {
+            type: Boolean,
+            default: true
+        },
+        total: {
+            type: Number,
+            default: 0
+        }
     },
-    show: {
-      type: Boolean,
-      default: true
-    },
-    total: {
-      type: Number,
-      default: 0
+    methods: {
+        handlePlayAll() {
+            this.$emit('playAll');
+        }
     }
-  },
-  methods: {
-    handlePlayAll() {
-      this.$emit("playAll");
-    }
-  }
 };
 </script>
 

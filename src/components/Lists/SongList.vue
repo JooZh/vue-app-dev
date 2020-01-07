@@ -1,71 +1,72 @@
 <template>
-  <div class="songlist">
-    <div class="list" v-for="(item, index) in data" :key="index">
-      <div class="number">{{ index + 1 }}</div>
-      <div class="detail" @click="handlePlayOne(index)">
-        <div class="songname-box">
-          <div class="songname">{{ item.song_name }}</div>
+    <div class="songlist">
+        <div v-for="(item, index) in data" :key="index" class="list">
+            <div class="number">{{index + 1}}</div>
+            <div class="detail" @click="handlePlayOne(index)">
+                <div class="songname-box">
+                    <div class="songname">{{item.song_name}}</div>
+                </div>
+                <div class="albumname-box">
+                    <div v-if="item.singers" class="albumname">
+                        {{item.singers | nameArrgs}} · {{item.album_name}}
+                    </div>
+                    <div v-else-if="item.album_name" class="albumname">
+                        专辑: {{item.album_name}}
+                    </div>
+                </div>
+            </div>
+            <div class="time" @click="handleAddSong(index)">
+                <Icon type="md-add" />
+            </div>
         </div>
-        <div class="albumname-box">
-          <div class="albumname" v-if="item.singers">
-            {{ item.singers | nameArrgs }} · {{ item.album_name }}
-          </div>
-          <div class="albumname" v-else-if="item.album_name">
-            专辑: {{ item.album_name }}
-          </div>
-        </div>
-      </div>
-      <div class="time" @click="handleAddSong(index)">
-        <Icon type="md-add" />
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters } from 'vuex';
 export default {
-  props: {
-    data: {
-      type: Array,
-      description: "歌曲列表"
-    }
-  },
-  data() {
-    return {};
-  },
-  filters: {
-    nameArrgs(val) {
-      let names = "";
-      val.map(item => {
-        names += item.name;
-      });
-      return names;
-    }
-  },
-  computed: {
-    ...mapGetters(["playerList"])
-  },
-  methods: {
-    ...mapMutations(["playOne", "togglePlayer", "playAdd"]),
-    // 点击播放
-    handlePlayOne() {
-      // 添加到列表
-      // this.playOne(this.data[index]);
-      // 打开播放器
-      // this.togglePlayer();
+    filters: {
+        nameArrgs(val) {
+            let names = '';
+            val.forEach(item => {
+                names += item.name;
+            });
+            return names;
+        }
     },
-    // 点击添加歌曲
-    handleAddSong(index) {
-      // let notice = ''
-      // if (this.isIn(index) === -1) {
-      this.playAdd(this.data[index]);
-      //   notice = '添加成功'
-      // } else {
-      //   notice = '歌曲已存在'
-      // }
-      this.$toast("添加成功", { duration: "800" });
-    }
+    props: {
+        data: {
+            type: Array,
+            description: '歌曲列表',
+            default: () => []
+        }
+    },
+    data() {
+        return {};
+    },
+    computed: {
+        ...mapGetters(['playerList'])
+    },
+    methods: {
+        ...mapMutations(['playOne', 'togglePlayer', 'playAdd']),
+        // 点击播放
+        handlePlayOne() {
+            // 添加到列表
+            // this.playOne(this.data[index]);
+            // 打开播放器
+            // this.togglePlayer();
+        },
+        // 点击添加歌曲
+        handleAddSong(index) {
+            // let notice = ''
+            // if (this.isIn(index) === -1) {
+            this.playAdd(this.data[index]);
+            //   notice = '添加成功'
+            // } else {
+            //   notice = '歌曲已存在'
+            // }
+            this.$toast('添加成功', { duration: '800' });
+        }
     // 获取歌曲对象
     // getSong (index) {
     //   let find = this.isIn(index)
@@ -80,7 +81,7 @@ export default {
     //   let song_id = this.data[index].song_id
     //   return this.playerList.findIndex(song => song.song_id === song_id)
     // }
-  }
+    }
 };
 </script>
 

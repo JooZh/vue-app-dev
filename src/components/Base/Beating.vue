@@ -1,24 +1,24 @@
 <template>
-  <div class="wrap">
-    <ul class="music" :class="play ? 'start' : 'stop'">
-      <li class="s m1"></li>
-      <li class="s m2"></li>
-      <li class="s m3"></li>
-      <li class="s m1"></li>
-      <li class="s m2"></li>
-      <li class="s m3"></li>
-    </ul>
-  </div>
+    <div class="wrap">
+        <ul class="music" :class="play ? 'start' : 'stop'">
+            <li class="s m1"></li>
+            <li class="s m2"></li>
+            <li class="s m3"></li>
+            <li class="s m1"></li>
+            <li class="s m2"></li>
+            <li class="s m3"></li>
+        </ul>
+    </div>
 </template>
 
 <script>
 export default {
-  props: {
-    play: {
-      type: Boolean,
-      description: "播放状态"
+    props: {
+        play: {
+            type: Boolean,
+            description: '播放状态'
+        }
     }
-  }
 };
 </script>
 

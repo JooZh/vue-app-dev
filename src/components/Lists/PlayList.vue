@@ -1,75 +1,75 @@
 <template>
-  <div class="scroll-layout">
-    <ScrollView :data="playerList" :scrollingY="true">
-      <ul class="songlist">
-        <li
-          class="list"
-          v-for="(item, index) in playerList"
-          :class="{ del: deleteIndex == index, active: playSongindex == index }"
-          :key="index"
-        >
-          <div class="number">
-            <Icon v-if="playSongindex == index" type="md-stats" />
-            <Icon v-else type="md-musical-notes" />
-          </div>
-          <div class="detail" @click.stop="changeSong(index)">
-            <div class="songname text-line">
-              <div class="pix">{{ item.song_name }}</div>
-            </div>
-            <div class="albumname text-line">
-              <div class="pix" v-if="item.singers">
-                {{ item.singers | nameArrgs }} · {{ item.album_name }}
-              </div>
-              <div class="pix" v-else-if="item.album_name">
-                专辑: {{ item.album_name }}
-              </div>
-            </div>
-          </div>
-          <div class="time">
-            <div class="c" @click.stop="deleteSong(index)">
-              <Icon type="md-close" />
-            </div>
-          </div>
-        </li>
-      </ul>
-    </ScrollView>
-  </div>
+    <div class="scroll-layout">
+        <ScrollView :data="playerList" :scrollingY="true">
+            <ul class="songlist">
+                <li
+                    v-for="(item, index) in playerList"
+                    :key="index"
+                    class="list"
+                    :class="{ del: deleteIndex === index, active: playSongindex === index }"
+                >
+                    <div class="number">
+                        <Icon v-if="playSongindex === index" type="md-stats" />
+                        <Icon v-else type="md-musical-notes" />
+                    </div>
+                    <div class="detail" @click.stop="changeSong(index)">
+                        <div class="songname text-line">
+                            <div class="pix">{{item.song_name}}</div>
+                        </div>
+                        <div class="albumname text-line">
+                            <div v-if="item.singers" class="pix">
+                                {{item.singers | nameArrgs}} · {{item.album_name}}
+                            </div>
+                            <div v-else-if="item.album_name" class="pix">
+                                专辑: {{item.album_name}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="time">
+                        <div class="c" @click.stop="deleteSong(index)">
+                            <Icon type="md-close" />
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </ScrollView>
+    </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from 'vuex';
 export default {
-  data() {
-    return {
-      deleteIndex: -1
-    };
-  },
-  filters: {
-    nameArrgs(val) {
-      let names = "";
-      val.map(item => {
-        names += item.name;
-      });
-      return names;
+    filters: {
+        nameArrgs(val) {
+            let names = '';
+            val.forEach(item => {
+                names += item.name;
+            });
+            return names;
+        }
+    },
+    data() {
+        return {
+            deleteIndex: -1
+        };
+    },
+    computed: {
+        ...mapGetters(['playerList', 'playSongindex'])
+    },
+    methods: {
+        changeSong(index) {
+            this.playSome(index);
+        },
+        deleteSong(index) {
+            this.deleteIndex = index;
+            setTimeout(() => {
+                this.delOne(index);
+                this.deleteIndex = -1;
+                this.$emit('delOneSong');
+            }, 300);
+        },
+        ...mapMutations(['playSome', 'delOne'])
     }
-  },
-  computed: {
-    ...mapGetters(["playerList", "playSongindex"])
-  },
-  methods: {
-    changeSong(index) {
-      this.playSome(index);
-    },
-    deleteSong(index) {
-      this.deleteIndex = index;
-      setTimeout(() => {
-        this.delOne(index);
-        this.deleteIndex = -1;
-        this.$emit("delOneSong");
-      }, 300);
-    },
-    ...mapMutations(["playSome", "delOne"])
-  }
 };
 </script>
 
