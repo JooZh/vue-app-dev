@@ -1,5 +1,5 @@
 <template>
-    <PageScrollView isTab>
+    <PageScrollView isTab :onScroll="onScroll">
         <div class="container">
             <!-- <Swiper :items="imageList"></!-->
             <Mvlist :data="mvlist"></Mvlist>
@@ -33,6 +33,9 @@ export default {
         this.getData();
     },
     methods: {
+        onScroll(e) {
+            // console.log(e);
+        },
         onPullingDown() {
             this.showLoading = true;
             setTimeout(() => {

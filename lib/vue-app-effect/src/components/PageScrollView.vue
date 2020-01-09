@@ -50,7 +50,8 @@ export default {
         },
         data: {
             type: [Array, Object, Number],
-            discription: '监听数据'
+            discription: '监听数据',
+            default: 0,
         },
         title: {
             type: String,

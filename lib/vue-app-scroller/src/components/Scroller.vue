@@ -44,7 +44,8 @@
 
 <script>
 // import Scroller from '../new/new-scroller.js'
-import Scroller from '../core/index';
+// import Scroller from '../core/index';
+import Scroller from '../tsc/index';
 import Spinner from './Spinner.vue';
 import Arrow from './Arrow.vue';
 
@@ -190,6 +191,7 @@ export default {
             //     this.refresh()
             //   }
             // },{ deep: true});
+            console.log(this.scroller);
             // 根据是否绑定监听函数来判断是否调用
             this.scrollingX && this.getContentWidth();
             !!this.onScroll && this.onScrollHandler();
@@ -212,8 +214,7 @@ export default {
                 let contentDoms = this.content.children[1].children;
                 Array.from(contentDoms).forEach(item => {
                     // 为获取移动端精度
-                    let width =
-                        Math.round(item.getBoundingClientRect().width * 100) / 100;
+                    let width = Math.round(item.getBoundingClientRect().width * 100) / 100;
                     widths += width;
                 });
                 // 对paging 模式添加固定样式
