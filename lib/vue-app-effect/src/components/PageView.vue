@@ -33,21 +33,6 @@ export default {
             type: String,
             default: '',
             discription: '导航标题, 传值显示导航'
-        },
-        pullRefresh: {
-            type: Function,
-            default: null,
-            discription: '下拉刷新函数'
-        },
-        reachBottom: {
-            type: Function,
-            default: null,
-            discription: '上拉加载函数'
-        },
-        onScroll: {
-            type: Function,
-            default: null,
-            discription: '监听滚动函数'
         }
     }
 };

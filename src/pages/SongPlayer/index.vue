@@ -41,7 +41,7 @@
                     }"
                     @click="toggleLyric"
                 >
-                    <ScrollView :data="playLyric" :scrollingY="true">
+                    <vue-app-scroller :data="playLyric" :scrollingY="true">
                         <div
                             v-for="(item, index) in playLyric"
                             ref="lyricLine"
@@ -51,7 +51,7 @@
                         >
                             {{item.text}}
                         </div>
-                    </ScrollView>
+                    </vue-app-scroller>
                 </div>
             </div>
             <div class="play-bottom">

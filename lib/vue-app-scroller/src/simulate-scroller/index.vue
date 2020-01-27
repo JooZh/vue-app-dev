@@ -11,11 +11,7 @@
                 :class="{ active: refreshState !== 0 }"
             >
                 <div class="refresh--content__icons">
-                    <spinner
-                        v-if="refreshState === 2"
-                        class="icon__spinner"
-                        style="fill:#AAA;stroke:#AAA"
-                    ></spinner>
+                    <spinner v-if="refreshState === 2" class="icon__spinner" style="fill:#AAA;stroke:#AAA"></spinner>
                     <arrow v-else class="icon__arrow" fillColor="#AAA"></arrow>
                 </div>
                 <div class="refresh--content__texts">
@@ -30,10 +26,7 @@
             </div>
             <div v-if="!!onReachBottom" class="loading--content">
                 <span v-if="showLoading" class="spinner-holder">
-                    <spinner
-                        class="icon__spinner"
-                        style="fill: #AAA;stroke: #AAA"
-                    ></spinner>
+                    <spinner class="icon__spinner" style="fill: #AAA;stroke: #AAA"></spinner>
                 </span>
                 <div v-else class="no-data-text">没有更多数据</div>
             </div>
@@ -43,11 +36,10 @@
 </template>
 
 <script>
-// import Scroller from '../new/new-scroller.js'
-// import Scroller from '../core/index';
-import Scroller from '../tsc/index';
-import Spinner from './Spinner.vue';
-import Arrow from './Arrow.vue';
+import Scroller from './js/index';
+// import Scroller from '../tsc/index';
+import Spinner from '../components/Spinner';
+import Arrow from '../components/Arrow';
 
 export default {
     components: {
@@ -59,6 +51,16 @@ export default {
             type: [Array, Object, Number],
             description: '监听数据的变化',
             default: () => {}
+        },
+        scrollingX: {
+            type: Boolean,
+            default: false,
+            description: '是否横向滚动'
+        },
+        scrollingY: {
+            type: Boolean,
+            default: false,
+            description: '是否纵向滚动'
         },
         onScroll: {
             type: [Function],
@@ -74,21 +76,6 @@ export default {
             type: Function,
             description: '上拉加载处理函数',
             default: () => {}
-        },
-        scrollingX: {
-            type: Boolean,
-            default: false,
-            description: '是否横向滚动'
-        },
-        scrollingY: {
-            type: Boolean,
-            default: false,
-            description: '是否纵向滚动'
-        },
-        mousewheel: {
-            type: Boolean,
-            default: false,
-            description: '是否开启鼠标滚动'
         },
         snap: {
             type: [Boolean, Number, Array],
@@ -170,7 +157,6 @@ export default {
                 isReachBottom: !!this.onReachBottom, // 是否启用上拉加载事件
                 scrollingX: this.scrollingX, // 开启横向滚动
                 scrollingY: this.scrollingY, // 开启纵向滚动
-                mousewheel: this.mousewheel, // 开启鼠标滚轮事件监听
                 paging: this.paging, // 是否开启分页
                 snap: this.snap, // 是否开启像素网格
                 snapAlign: this.snapAlign,

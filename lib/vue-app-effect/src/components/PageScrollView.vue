@@ -4,15 +4,15 @@
             <div id="vue-app-effect__sub-router-view">
                 <Navigation v-if="title" :title="title" :backShow="!isTab"></Navigation>
                 <div class="bd-view" :class="{ 'bd-view-full': !title }">
-                    <ScrollView
+                    <vue-app-scroller
                         :scrollingY="true"
-                        :pullRefresh="pullRefresh"
-                        :reachBottom="reachBottom"
+                        :onPullRefresh="onPullRefresh"
+                        :onReachBottom="onReachBottom"
                         :onScroll="onScroll"
                         :data="data"
                     >
                         <slot></slot>
-                    </ScrollView>
+                    </vue-app-scroller>
                     <slot name="position"></slot>
                 </div>
             </div>
@@ -21,15 +21,15 @@
         <template v-else>
             <Navigation v-if="title" :title="title" :backShow="!isTab"></Navigation>
             <div class="bd-view" :class="{ 'bd-view-full': !title }">
-                <ScrollView
+                <vue-app-scroller
                     :scrollingY="true"
-                    :pullRefresh="pullRefresh"
-                    :reachBottom="reachBottom"
+                    :onPullRefresh="onPullRefresh"
+                    :onReachBottom="onReachBottom"
                     :onScroll="onScroll"
                     :data="data"
                 >
                     <slot></slot>
-                </ScrollView>
+                </vue-app-scroller>
                 <slot name="position"></slot>
             </div>
         </template>
@@ -58,12 +58,12 @@ export default {
             default: '',
             discription: '导航标题, 传值显示导航'
         },
-        pullRefresh: {
+        onPullRefresh: {
             type: Function,
             default: null,
             discription: '下拉刷新函数'
         },
-        reachBottom: {
+        onReachBottom: {
             type: Function,
             default: null,
             discription: '上拉加载函数'

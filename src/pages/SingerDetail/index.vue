@@ -1,7 +1,7 @@
 <template>
     <PageScrollView
         :title="headerTitle"
-        :reachBottom="onPullingUp"
+        :onReachBottom="onPullingUp"
         :onScroll="onScroll"
     >
         <div class="singer-detail">

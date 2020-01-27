@@ -2,7 +2,7 @@
     <PageView isTab>
         <div class="areas-fix">
             <div class="areas border-half-bottom">
-                <ScrollView :scrollingX="true">
+                <vue-app-scroller :scrollingX="true">
                     <div ref="areas" class="areas-list">
                         <div
                             v-for="(item, key) in tags.area"
@@ -14,10 +14,10 @@
                             <span>{{item.name}}</span>
                         </div>
                     </div>
-                </ScrollView>
+                </vue-app-scroller>
             </div>
             <div class="areas border-half-bottom">
-                <ScrollView :scrollingX="true">
+                <vue-app-scroller :scrollingX="true">
                     <div ref="sexs" class="areas-list">
                         <div
                             v-for="(item, key) in tags.sex"
@@ -29,10 +29,10 @@
                             <span>{{item.name}}</span>
                         </div>
                     </div>
-                </ScrollView>
+                </vue-app-scroller>
             </div>
             <div class="areas border-half-bottom">
-                <ScrollView :scrollingX="true">
+                <vue-app-scroller :scrollingX="true">
                     <div ref="genres" class="areas-list">
                         <div
                             v-for="(item, key) in tags.genre"
@@ -44,12 +44,12 @@
                             <span>{{item.name}}</span>
                         </div>
                     </div>
-                </ScrollView>
+                </vue-app-scroller>
             </div>
         </div>
         <!-- 字母 -->
         <div class="letters border-half-left">
-            <ScrollView :scrollingY="true">
+            <vue-app-scroller :scrollingY="true">
                 <div class="letters-list">
                     <div
                         v-for="(item, index) in tags.index"
@@ -61,11 +61,11 @@
                         <span>{{item.name}}</span>
                     </div>
                 </div>
-            </ScrollView>
+            </vue-app-scroller>
         </div>
         <!-- 列表 -->
         <div class="singers-list">
-            <ScrollView :scrollingY="true" :reachBottom="onPullingUp">
+            <vue-app-scroller :scrollingY="true" :onReachBottom="onReachBottom">
                 <div class="singers">
                     <div
                         v-for="(item, index) in singerlist"
@@ -85,14 +85,8 @@
                             <div class="name f-name">{{item.singer_name}}</div>
                         </div>
                     </div>
-                    <div v-if="singerlist.length === 0 && loaded" class="no-singer">
-                        <div>
-                            <div>什么都木有!</div>
-                            <div>请切换类目继续浏览</div>
-                        </div>
-                    </div>
                 </div>
-            </ScrollView>
+            </vue-app-scroller>
         </div>
     </PageView>
 </template>
@@ -100,7 +94,7 @@
 <script>
 import { singerList } from '@/service/api';
 export default {
-    name: 'singer-detail',
+    name: 'singer',
     data() {
         return {
             init: true,
@@ -109,6 +103,7 @@ export default {
             // 路由使用
             singerlist: [],
             tags: {},
+            total: 0,
             letter: -100,
             area: -100,
             genre: -100,
@@ -160,12 +155,16 @@ export default {
             });
             this.$refs[dom].style.width = `${width}px`;
         },
-        onPullingUp() {
-            // console.log('到底')
-            let timer = setTimeout(() => {
-                this.getData();
-                clearTimeout(timer);
-            }, 800);
+        onReachBottom(done) {
+            if (this.total === this.singerlist.length) {
+                done();
+                return;
+            } else {
+                let timer = setTimeout(() => {
+                    this.getData();
+                    clearTimeout(timer);
+                }, 800);
+            }
         },
         // 获取数据
         getData() {
@@ -182,6 +181,7 @@ export default {
                 sin: this.sin,
                 cur_page: this.page
             }).then(res => {
+                this.total = res.total;
                 let singerarr = res.list;
                 // 合并数组
                 let addSingerlist = this.singerlist;
