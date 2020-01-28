@@ -1,5 +1,5 @@
 <template>
-    <PageScrollView isTab :onScroll="onScroll">
+    <PageScrollView isTab scrollingY :onScroll="onScroll" :onPullRefresh="onPullRefresh">
         <div class="container">
             <!-- <Swiper :items="imageList"></!-->
             <Mvlist :data="mvlist"></Mvlist>
@@ -17,7 +17,6 @@ export default {
     },
     data() {
         return {
-            showLoading: false,
             // 路由使用
             headerTitle: '推荐',
             imageList: [],
@@ -36,15 +35,15 @@ export default {
         onScroll(e) {
             // console.log(e);
         },
-        onPullingDown() {
-            this.showLoading = true;
+        onPullRefresh(done) {
             setTimeout(() => {
-                this.getData();
-            }, 1000);
+                this.getData(done);
+            }, 500);
         },
-        getData() {
+        getData(done) {
             recommendMvList().then(res => {
                 this.mvlist = res.mv_list;
+                done && done();
             });
         }
     }

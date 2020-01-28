@@ -52,29 +52,46 @@ export default {
             description: '监听数据的变化',
             default: () => {}
         },
+        scrollBar: {
+            type: Boolean,
+            required: false,
+            description: '是否需要显示滚动条',
+            default: true
+        },
         scrollingX: {
             type: Boolean,
-            default: false,
-            description: '是否横向滚动'
+            required: false,
+            description: '是否横向滚动',
+            default: false
         },
         scrollingY: {
             type: Boolean,
-            default: false,
-            description: '是否纵向滚动'
+            required: false,
+            description: '是否纵向滚动',
+            default: false
         },
         onScroll: {
-            type: [Function],
+            type: Function,
+            required: false,
             description: '滚动事件处理函数',
             default: () => {}
         },
         onPullRefresh: {
             type: Function,
+            required: false,
             description: '下拉刷新处理函数',
             default: () => {},
         },
         onReachBottom: {
             type: Function,
-            description: '上拉加载处理函数',
+            required: false,
+            description: '上拉触底事件',
+            default: () => {}
+        },
+        onLoadMore: {
+            type: Function,
+            required: false,
+            description: '上拉加载更多事件',
             default: () => {}
         },
         snap: {

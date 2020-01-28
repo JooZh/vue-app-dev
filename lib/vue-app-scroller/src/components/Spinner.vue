@@ -1,5 +1,5 @@
 <template>
-    <svg class="spinner" viewBox="0 0 64 64">
+    <svg viewBox="0 0 64 64">
         <g stroke-width="4" stroke-linecap="round">
             <line y1="17" y2="29" transform="translate(32,32) rotate(180)">
                 <animate
@@ -100,9 +100,3 @@
         </g>
     </svg>
 </template>
-<style>
-.spinner {
-  fill: #aaa;
-  stroke: #aaa;
-}
-</style>

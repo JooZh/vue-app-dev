@@ -65,7 +65,7 @@
         </div>
         <!-- 列表 -->
         <div class="singers-list">
-            <vue-app-scroller :scrollingY="true" :onReachBottom="onReachBottom">
+            <vue-app-scroller :scrollingY="true" :onLoadMore="onLoadMore" :onPullRefresh="onPullRefresh">
                 <div class="singers">
                     <div
                         v-for="(item, index) in singerlist"
@@ -166,8 +166,21 @@ export default {
                 }, 800);
             }
         },
+        onPullRefresh(done) {
+            this.sin = 0;
+            this.page = 1;
+            this.singerlist = [];
+            setTimeout(() => {
+                this.getData(done);
+            }, 500);
+        },
+        onLoadMore(done) {
+            setTimeout(() => {
+                this.getData(done);
+            }, 500);
+        },
         // 获取数据
-        getData() {
+        getData(done) {
             if (!this.loaded) {
                 return;
             }
@@ -181,6 +194,7 @@ export default {
                 sin: this.sin,
                 cur_page: this.page
             }).then(res => {
+                done && done();
                 this.total = res.total;
                 let singerarr = res.list;
                 // 合并数组
