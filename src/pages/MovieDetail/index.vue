@@ -35,13 +35,13 @@ export default {
     },
     methods: {
         goDetailMv(index, name) {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/MovieDetail/index/${index}`,
                 params: { id: index, name: name }
             });
         },
         goDetailSinger(index, name) {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/SingerDetail/index/${index}`,
                 params: { id: index, name: name }
             });

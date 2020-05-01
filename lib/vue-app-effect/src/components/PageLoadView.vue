@@ -5,32 +5,35 @@
                 <Navigation v-if="title" :title="title" :backShow="!isTab"></Navigation>
                 <div class="bd-view" :class="{ 'bd-view-full': !title }">
                     <vue-app-scroller
-                        :scrollingY="true"
-                        :onPullRefresh="onPullRefresh"
-                        :onReachBottom="onReachBottom"
+                        :loadControl="loadControl"
                         :onScroll="onScroll"
-                        :data="data"
+                        :onPullRefresh="onPullRefresh"
+                        :onLoadData="onLoadData"
+                        :scrollBar="scrollBar"
+                        :setScrollTop="setScrollTop"
                     >
+                        <slot name="header"></slot>
                         <slot></slot>
+                        <slot name="footer"></slot>
                     </vue-app-scroller>
-                    <slot name="position"></slot>
                 </div>
             </div>
         </template>
-
         <template v-else>
             <Navigation v-if="title" :title="title" :backShow="!isTab"></Navigation>
             <div class="bd-view" :class="{ 'bd-view-full': !title }">
                 <vue-app-scroller
-                    :scrollingY="true"
-                    :onPullRefresh="onPullRefresh"
-                    :onReachBottom="onReachBottom"
+                    :loadControl="loadControl"
                     :onScroll="onScroll"
-                    :data="data"
+                    :onPullRefresh="onPullRefresh"
+                    :onLoadData="onLoadData"
+                    :scrollBar="scrollBar"
+                    :setScrollTop="setScrollTop"
                 >
+                    <slot name="header"></slot>
                     <slot></slot>
+                    <slot name="footer"></slot>
                 </vue-app-scroller>
-                <slot name="position"></slot>
             </div>
         </template>
     </div>
@@ -38,7 +41,7 @@
 <script>
 import Navigation from './Navigation';
 export default {
-    name: 'Tab-Page-View',
+    name: 'AppPageLoadView',
     components: {
         Navigation
     },
@@ -47,11 +50,6 @@ export default {
             type: Boolean,
             default: false,
             discription: '是否是tab页面'
-        },
-        data: {
-            type: [Array, Object, Number],
-            discription: '监听数据',
-            default: 0,
         },
         title: {
             type: String,
@@ -63,7 +61,7 @@ export default {
             default: null,
             discription: '下拉刷新函数'
         },
-        onReachBottom: {
+        onLoadData: {
             type: Function,
             default: null,
             discription: '上拉加载函数'
@@ -72,6 +70,24 @@ export default {
             type: Function,
             default: null,
             discription: '监听滚动函数'
+        },
+        loadControl: {
+            type: Boolean,
+            required: false,
+            description: '是否加载数据',
+            default: true
+        },
+        scrollBar: {
+            type: Boolean,
+            required: false,
+            description: '是否需要显示滚动条',
+            default: true
+        },
+        setScrollTop: {
+            type: Number,
+            required: false,
+            description: '设置滚动条',
+            default: 0
         }
     }
 };

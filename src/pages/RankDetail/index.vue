@@ -1,5 +1,8 @@
 <template>
-    <PageScrollView :title="headerTitle" :onScroll="onScroll">
+    <PageView
+        :title="headerTitle"
+        :onScroll="onScroll"
+    >
         <div id="ranking-list">
             <div class="container">
                 <div id="infos" class="infos">
@@ -22,21 +25,14 @@
                     </div>
                 </div>
                 <TabPosition
-                    :show="true"
+                    :fixed="fixed"
                     :total="topInfo.total"
                     @playAll="handlePlayAll"
                 />
                 <SongList :data="songlist"></SongList>
             </div>
         </div>
-        <TabPosition
-            slot="position"
-            :total="topInfo.total"
-            :show="fixed"
-            :fixed="fixed"
-            @playAll="handlePlayAll"
-        />
-    </PageScrollView>
+    </PageView>
 </template>
 
 <script>
@@ -54,22 +50,21 @@ export default {
     },
     data() {
         return {
+            id: '',
             tabTop: 220,
             headerTitle: '',
             img: '',
-
             fixed: false,
             songlist: [],
             topInfo: {},
             defaultImg: require('@/assets/images/album.png')
         };
     },
-    mounted() {
-        let id = this.$route.params.id;
+    created() {
+        this.id = this.$route.params.id;
         this.headerTitle = this.$route.params.title;
         this.img = this.$route.params.img;
-        // 获取当前页面高度
-        this.getMusicList(id);
+        this.getMusicList(this.id);
     },
     methods: {
         ...mapMutations(['playAll']),
@@ -86,8 +81,6 @@ export default {
                 topInfo.pts = `第${topInfo.week}周`;
                 this.topInfo = topInfo;
                 this.songlist = res.song_list;
-                // 吸顶效果
-                // this.tabTop = this.$refs.tab.getBoundingClientRect().top - 40
             });
         }
     }

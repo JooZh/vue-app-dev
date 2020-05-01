@@ -1,5 +1,9 @@
 <template>
-    <PageScrollView isTab>
+    <PageLoadView
+        isTab
+        :onLoadData="loadData"
+        :onPullRefresh="onPullRefresh"
+    >
         <div class="container">
             <div v-for="(item, index) in toplist" :key="index" class="list-warpper">
                 <div
@@ -28,7 +32,7 @@
                 </div>
             </div>
         </div>
-    </PageScrollView>
+    </PageLoadView>
 </template>
 
 <script>
@@ -40,12 +44,17 @@ export default {
             toplist: []
         };
     },
-    mounted() {
-        this.getData();
-    },
     methods: {
+        loadData(done) {
+            this.getData(done);
+        },
+        onPullRefresh(done) {
+            setTimeout(() => {
+                this.getData(done);
+            }, 500);
+        },
         goDetail(id, title, img) {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/RankDetail/index`,
                 params: {
                     id: id,
@@ -54,9 +63,10 @@ export default {
                 }
             });
         },
-        getData() {
+        getData(done) {
             topList().then(res => {
                 this.toplist = res;
+                done && done(true, false);
             });
         }
     }

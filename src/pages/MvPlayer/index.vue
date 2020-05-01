@@ -64,7 +64,7 @@
 <script>
 import { recommendMvDetailAll } from '@/service/api';
 export default {
-    name: 'mv-player',
+    name: 'MvPlayer',
     data() {
         return {
             video: null,
@@ -88,20 +88,24 @@ export default {
     },
     methods: {
         back() {
-            this.$vueAppEffect.back();
+            this.$VueAppEffect.back();
         },
         changePlay(mid) {
             this.$refs.video.pause();
-            this.getData(mid);
+            let timer = setTimeout(() => {
+                this.getData(mid);
+                clearTimeout(timer);
+            }, 50);
         },
         getData(mid) {
             recommendMvDetailAll({ mv_mid: mid }).then(res => {
                 this.playUrl = res.recommend_url;
                 this.mvInfo = res.mv_info;
                 this.otherList = this.subArr(res.other_list);
-                setTimeout(() => {
+                let timer = setTimeout(() => {
                     this.video = this.$refs.video;
                     this.$refs.video.play();
+                    clearTimeout(timer);
                 }, 200);
             });
         },

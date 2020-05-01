@@ -1,22 +1,29 @@
 <template>
-    <PageScrollView isTab scrollingY :onScroll="onScroll" :onPullRefresh="onPullRefresh">
-        <div class="container">
+    <PageLoadView
+        isTab
+        :onScroll="onScroll"
+        :onLoadData="loadData"
+        :onPullRefresh="onPullRefresh"
+    >
+        <div v-if="load" class="container">
             <!-- <Swiper :items="imageList"></!-->
-            <Mvlist :data="mvlist"></Mvlist>
+            <Mvlist v-if="mvlist.length" :data="mvlist"></Mvlist>
+            <Empty v-else></Empty>
         </div>
-    </PageScrollView>
+    </PageLoadView>
 </template>
 
 <script>
 import Mvlist from '@/components/Lists/MvList';
 import { recommendMvList } from '@/service/api';
 export default {
-    name: 'recomment',
+    name: 'recommend',
     components: {
         Mvlist
     },
     data() {
         return {
+            load: false,
             // 路由使用
             headerTitle: '推荐',
             imageList: [],
@@ -28,9 +35,6 @@ export default {
             startY: 0
         };
     },
-    mounted() {
-        this.getData();
-    },
     methods: {
         onScroll(e) {
             // console.log(e);
@@ -40,10 +44,15 @@ export default {
                 this.getData(done);
             }, 500);
         },
+        loadData(done) {
+            this.getData(done);
+        },
         getData(done) {
             recommendMvList().then(res => {
                 this.mvlist = res.mv_list;
-                done && done();
+                // this.mvlist = [];
+                this.load = true;
+                done && done(true, !this.mvlist.length);
             });
         }
     }

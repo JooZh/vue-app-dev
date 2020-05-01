@@ -8,6 +8,6 @@
 
 <script>
 export default {
-    name: 'Tab-Con'
+    name: 'AppTabContainer'
 };
 </script>

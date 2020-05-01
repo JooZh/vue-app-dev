@@ -31,11 +31,11 @@ export default {
     },
     methods: {
         getPlay(index) {
-            // let data = this.data[index];
-            // this.$vueAppEffect.next({
-            //     path: `/pages/MvPlayer/index`,
-            //     params: { mid: data.mv_mid }
-            // });
+            let data = this.data[index];
+            this.$VueAppEffect.next({
+                path: `/pages/MvPlayer/index`,
+                params: { mid: data.mv_mid }
+            });
         }
     }
 };

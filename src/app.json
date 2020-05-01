@@ -17,7 +17,7 @@
     "list":[
       {
         "text":"推荐",
-        "path":"pages/Recomment/index",
+        "path":"pages/Recommend/index",
         "iconFont":"<i class='ivu-icon ivu-icon-ios-thumbs-up'></i>",
         "iconFontActive":"",
         "iconImagePath":"",

@@ -37,7 +37,7 @@
 
 <script>
 import Scroller from './js/index';
-// import Scroller from '../tsc/index';
+// import Scroller from './ts/index';
 import Spinner from '../components/Spinner';
 import Arrow from '../components/Arrow';
 

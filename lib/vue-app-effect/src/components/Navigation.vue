@@ -13,6 +13,7 @@
 <script>
 // import Music from '../../components/Music/index'
 export default {
+    name: 'AppNavigation',
     props: {
         title: {
             type: String,
@@ -25,10 +26,10 @@ export default {
     },
     methods: {
         back() {
-            this.$vueAppEffect.back();
+            this.$VueAppEffect.back();
         },
         changePlayer() {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/Player/index`
             });
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="scroll-layout">
-        <vue-app-scroller :data="playerList" :scrollingY="true">
+        <vue-app-scroller>
             <ul class="songlist">
                 <li
                     v-for="(item, index) in playerList"

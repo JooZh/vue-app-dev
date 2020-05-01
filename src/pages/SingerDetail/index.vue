@@ -1,8 +1,10 @@
 <template>
-    <PageScrollView
+    <PageLoadView
         :title="headerTitle"
-        :onReachBottom="onPullingUp"
+        :loadControl="loadControl"
         :onScroll="onScroll"
+        :onLoadData="loadData"
+        :setScrollTop="setScrollTop"
     >
         <div class="singer-detail">
             <div id="infos" class="infos">
@@ -24,21 +26,15 @@
             </div>
             <TabPosition
                 :total="totals"
-                :show="true"
+                :fixed="fixed"
                 :index="tabCurrent"
                 @tabChange="tabChange"
             />
-            <component :is="componentPlan" :data="componentData" />
+            <div class="list-warpper">
+                <component :is="componentPlan" :data="componentData" />
+            </div>
         </div>
-        <TabPosition
-            slot="position"
-            :index="tabCurrent"
-            :total="totals"
-            :show="fixed"
-            :fixed="fixed"
-            @tabChange="tabChange"
-        />
-    </PageScrollView>
+    </PageLoadView>
 </template>
 
 <script>
@@ -56,15 +52,16 @@ import {
 export default {
     name: 'singer-detail',
     components: {
-        SongList,
-        MvList,
-        AlbumList,
         TabPosition
     },
     data() {
         return {
+
+            isInit: false,
             componentPlan: SongList,
             componentData: [],
+            loadFnName: 'loadDataSong',
+
             headerTitle: '',
             fixed: false,
             totals: {
@@ -73,27 +70,41 @@ export default {
                 mv_total: 0
             },
             tabCurrent: 0,
-
             mid: -1,
             song: {
+                loadFn: 'loadDataSong',
+                component: SongList,
+                done: false,
                 begin: 0,
                 num: 30,
-                musicList: []
+                top: 0,
+                list: []
             },
             mv: {
+                loadFn: 'loadDataMv',
+                component: MvList,
+                done: false,
                 begin: 0,
                 num: 20,
-                mvList: []
+                top: 0,
+                list: []
             },
             album: {
+                loadFn: 'loadDataAlbum',
+                component: AlbumList,
+                done: false,
                 begin: 0,
                 num: 20,
-                albumList: []
+                top: 0,
+                list: []
             },
             singerInfo: {
                 singer_avatar: '',
                 singer_fance: 0
             },
+            setScrollTop: 0,
+            loadControl: true,
+            loadCount: 0,
             defaultImg: require('@/assets/images/singer.png')
         };
     },
@@ -104,38 +115,100 @@ export default {
         this.singerInfo.singer_avatar = `https://y.gtimg.cn/music/photo_new/T001R800x800M000${this.mid}.jpg?max_age=2592000`;
         // 获取当前页面高度
         this.getFance();
-        this.getMusicList();
-        this.getMv();
-        this.getAlbum();
     },
     methods: {
+        onScroll(pos) {
+            this.fixed = 290 - pos.y <= 0;
+            if (this.tabCurrent === 0) {
+                this.song.top = pos.y;
+            } else if (this.tabCurrent === 1) {
+                this.album.top = pos.y;
+            } else if (this.tabCurrent === 2) {
+                this.mv.top = pos.y;
+            }
+        },
         tabChange(data) {
             this.tabCurrent = data.index;
             if (this.tabCurrent === 0) {
-                this.componentData = this.song.musicList;
-                this.componentPlan = SongList;
+                this.changeHandler('song');
             } else if (this.tabCurrent === 1) {
-                this.componentData = this.album.albumList;
-                this.componentPlan = AlbumList;
+                this.changeHandler('album');
             } else if (this.tabCurrent === 2) {
-                this.componentData = this.mv.mvList;
-                this.componentPlan = MvList;
+                this.changeHandler('mv');
             }
         },
-        onScroll(pos) {
-            this.fixed = 290 - pos.y <= 0;
+        changeHandler(type) {
+            this.loadFnName = this[type].loadFn;
+            this.componentData = [];
+            this.componentData = this[type].list;
+            // if (this.fixed && this[type].top === 0) {
+            //     this.setScrollTop = 290;
+            // } else if (this.fixed && this[type].top !== 0) {
+            //     this.setScrollTop = this[type].top;
+            // }
+            this.componentPlan = this[type].component;
+            this.checkDone(type);
         },
-        onPullingUp() {
-            let timer = setTimeout(() => {
-                if (this.tabCurrent === 0) {
-                    this.getMusicList();
-                } else if (this.tabCurrent === 1) {
-                    this.getAlbum();
-                } else if (this.tabCurrent === 2) {
-                    this.getMv();
-                }
-                clearTimeout(timer);
-            }, 500);
+        checkDone(type) {
+            if (this[type].list.length === this.totals[type + '_total']) {
+                this.loadControl = false;
+                this[type].done = true;
+            } else {
+                this.loadControl = true;
+                this[type].done = false;
+            }
+        },
+        loadData(done) {
+            if (!this.isInit) {
+                this.isInit = true;
+                this.loadDataMv(done);
+                this.loadDataSong(done);
+                this.loadDataAlbum(done);
+            } else {
+                this[this.loadFnName](done);
+            }
+        },
+        loadDataMv(done) {
+            singerMv({
+                singer_mid: this.mid,
+                begin: this.mv.begin,
+                num: this.mv.num
+            }).then(res => {
+                this.dataHandler('mv', res, done);
+            });
+        },
+        loadDataSong(done) {
+            singerSong({
+                singer_mid: this.mid,
+                begin: this.song.begin,
+                num: this.song.num
+            }).then(res => {
+                this.dataHandler('song', res, done);
+            });
+        },
+        loadDataAlbum(done) {
+            singerAlbum({
+                singer_mid: this.mid,
+                begin: this.album.begin,
+                num: this.album.num
+            }).then(res => {
+                this.dataHandler('album', res, done);
+            });
+        },
+        dataHandler(type, res, done) {
+            this.loadCount++;
+            this.totals[type + '_total'] = res.total;
+            this[type].list = this[type].list.concat(res.list);
+            this.componentData = this[type].list;
+            this[type].begin = this[type].begin + this[type].num;
+            this[type].done = this[type].list.length === res.total;
+            if (this.loadCount === 3) {
+                this.componentData = this.song.list;
+                let done = this.song.list.length === this.totals.song_total;
+                done && done(done);
+            } else {
+                done && done(this[type].done);
+            }
         },
         // 获取粉丝
         getFance() {
@@ -145,73 +218,6 @@ export default {
                 this.singerInfo.singer_fance = res.str;
             });
         },
-        // 获取单曲数据
-        getMusicList() {
-            singerSong({
-                singer_mid: this.mid,
-                begin: this.song.begin,
-                num: this.song.num
-            }).then(res => {
-                if (
-                    this.song.begin > 0 &&
-                    this.song.musicList.length === this.totals.song_total
-                ) {
-                    return;
-                }
-                // 合并数组
-                this.song.musicList = this.song.musicList.concat(res.list);
-                this.componentData = this.song.musicList;
-                // 只加载一次
-                this.totals.song_total = res.total;
-                // 吸顶效果
-                // 设置分页加载数据
-                this.song.begin = this.song.begin + this.song.num;
-            });
-        },
-        // 获取mv
-        getMv() {
-            singerMv({
-                singer_mid: this.mid,
-                begin: this.mv.begin,
-                num: this.mv.num
-            }).then(res => {
-                if (
-                    this.mv.begin > 0 &&
-                    this.mv.mvList.length === this.totals.mv_total
-                ) {
-                    return;
-                }
-                this.mv.mvList = this.mv.mvList.concat(res.list);
-                // 更新分页加载数据
-                this.mv.begin = this.mv.begin + this.mv.num;
-                if (this.mv.begin > 0) {
-                    this.componentData = this.mv.mvList;
-                }
-                this.totals.mv_total = res.total;
-            });
-        },
-        // 获取专辑
-        getAlbum() {
-            singerAlbum({
-                singer_mid: this.mid,
-                begin: this.album.begin,
-                num: this.album.num
-            }).then(res => {
-                if (
-                    this.album.begin > 0 &&
-                    this.album.albumList.length === this.totals.album_total
-                ) {
-                    return;
-                }
-                // 合并数组
-                this.album.albumList = this.album.albumList.concat(res.list);
-                this.album.begin = this.album.begin + this.album.num;
-                if (this.album.begin > 0) {
-                    this.componentData = this.album.albumList;
-                }
-                this.totals.album_total = res.total;
-            });
-        }
     }
 };
 </script>
@@ -221,7 +227,6 @@ export default {
 .singer-detail
   position relative
   width 100%
-  height 100%
   background $bgColor
   z-index 12
 .infos{

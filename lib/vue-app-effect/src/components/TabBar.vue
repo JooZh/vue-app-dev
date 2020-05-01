@@ -18,7 +18,7 @@
 <script>
 import { config } from '../util';
 export default {
-    name: 'Tab-Bar',
+    name: 'AppTabBar',
     data() {
         let tabBar = config.tabBar;
         return {

@@ -12,7 +12,7 @@
 <script>
 import { config, getComponent } from '../util';
 export default {
-    name: 'App-Root',
+    name: 'AppRoot',
     data() {
         return {
             showComponent: config.commonComponent,
@@ -25,10 +25,10 @@ export default {
         };
     },
     created() {
-        this.$vueAppEffect.on('forward', direction => {
+        this.$VueAppEffect.on('forward', direction => {
             this.Direction = direction;
         });
-        this.$vueAppEffect.on('reverse', direction => {
+        this.$VueAppEffect.on('reverse', direction => {
             this.Direction = direction;
         });
     }

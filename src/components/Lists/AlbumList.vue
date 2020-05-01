@@ -33,7 +33,7 @@ export default {
     },
     methods: {
         getDetail(mid, title) {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/AlbumDetail/index`,
                 params: { id: mid, title: title }
             });

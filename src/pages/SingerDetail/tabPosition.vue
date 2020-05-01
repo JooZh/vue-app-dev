@@ -1,6 +1,6 @@
 <template>
-    <div v-show="show" class="tab border-half-bottom">
-        <div class="tab-list" :class="fixed ? 'fixed' : ''">
+    <div class="tab">
+        <div class="tab-list border-half-bottom" :class="fixed ? 'fixed' : ''">
             <div class="tab-list-item" @click="tabChange(0)">
                 <span :class="{ on: index === 0 }">单曲 {{totals.song_total}}</span>
             </div>
@@ -24,10 +24,6 @@ export default {
         fixed: {
             type: Boolean,
             default: false
-        },
-        show: {
-            type: Boolean,
-            default: true
         },
         total: {
             type: Object,
@@ -62,28 +58,26 @@ export default {
   width: 100%;
   height 40px;
   position: relative;
-
-}
-.tab .fixed{
-  position: fixed;
-  top: 40px;
-  left: 0;
-  z-index: 2;
-  background: #252525;
-  transition: background 0.5s ease;
 }
 .tab-list {
   background: transparent;
-  transition: background 0.5s ease;
   width: 100%;
+  height 40px;
+  padding-left 0px;
   display: flex;
   border-bottom: 1rpx solid #202020;
   text-align: center;
   line-height: 40px;
-  position: absolute;
-  top: 0;
-  left: 0
 }
+.tab .tab-list.fixed{
+  position: fixed;
+  top: 40px;
+  left: 0;
+  right:0;
+  z-index: 2;
+  background: #252525;
+}
+
 .tab-list .tab-list-item {
   font-size: 14px;
   flex: 1;

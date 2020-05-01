@@ -1,10 +1,6 @@
 <template>
-    <div
-        v-show="show"
-        class="tab border-half-bottom"
-        :class="{ 'border-half-top': fixed }"
-    >
-        <div class="tab-list" :class="{ fixed: fixed }">
+    <div class="tab border-half-bottom">
+        <div class="tab-list" :class="{ 'fixed': fixed }">
             <div class="tab-list-item left">
                 <span class="left">排行榜共 {{total}} 首</span>
             </div>
@@ -39,14 +35,13 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .tab
   width: 100%;
   height 40px
   position: relative;
   .tab-list
     background: transparent;
-    transition: background 0.5s ease;
     width: 100%;
     display: flex;
     line-height: 40px;
@@ -59,7 +54,6 @@ export default {
       left: 0;
       z-index: 2;
       background: #252525;
-      transition: background 0.5s ease;
     .tab-list-item
       font-size: 15px;
       font-weight 700

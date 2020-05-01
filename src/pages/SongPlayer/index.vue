@@ -41,7 +41,7 @@
                     }"
                     @click="toggleLyric"
                 >
-                    <vue-app-scroller :data="playLyric" :scrollingY="true">
+                    <vue-app-scroller :scrollingY="true">
                         <div
                             v-for="(item, index) in playLyric"
                             ref="lyricLine"

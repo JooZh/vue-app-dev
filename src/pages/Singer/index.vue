@@ -1,8 +1,8 @@
 <template>
-    <PageView isTab>
+    <PageView isTab noScrollTouch>
         <div class="areas-fix">
             <div class="areas border-half-bottom">
-                <vue-app-scroller :scrollingX="true">
+                <vue-app-scroller :scrollBar="false">
                     <div ref="areas" class="areas-list">
                         <div
                             v-for="(item, key) in tags.area"
@@ -17,7 +17,7 @@
                 </vue-app-scroller>
             </div>
             <div class="areas border-half-bottom">
-                <vue-app-scroller :scrollingX="true">
+                <vue-app-scroller :scrollBar="false">
                     <div ref="sexs" class="areas-list">
                         <div
                             v-for="(item, key) in tags.sex"
@@ -32,7 +32,7 @@
                 </vue-app-scroller>
             </div>
             <div class="areas border-half-bottom">
-                <vue-app-scroller :scrollingX="true">
+                <vue-app-scroller :scrollBar="false">
                     <div ref="genres" class="areas-list">
                         <div
                             v-for="(item, key) in tags.genre"
@@ -49,7 +49,7 @@
         </div>
         <!-- 字母 -->
         <div class="letters border-half-left">
-            <vue-app-scroller :scrollingY="true">
+            <vue-app-scroller :scrollBar="false">
                 <div class="letters-list">
                     <div
                         v-for="(item, index) in tags.index"
@@ -65,26 +65,33 @@
         </div>
         <!-- 列表 -->
         <div class="singers-list">
-            <vue-app-scroller :scrollingY="true" :onLoadMore="onLoadMore" :onPullRefresh="onPullRefresh">
+            <vue-app-scroller
+                ref="scroll"
+                :onLoadData="loadData"
+                :onPullRefresh="onPullRefresh"
+            >
                 <div class="singers">
-                    <div
-                        v-for="(item, index) in singerlist"
-                        :key="index"
-                        class="singer"
-                        @click="openSinger(item.singer_mid, item.singer_name)"
-                    >
-                        <img
-                            v-lazy="{
-                                src: item.singer_avatar,
-                                error: defaultImg,
-                                loading: defaultImg
-                            }"
-                            class="avatar"
-                        />
-                        <div class="info">
-                            <div class="name f-name">{{item.singer_name}}</div>
+                    <template v-if="singerlist.length">
+                        <div
+                            v-for="(item,index) in singerlist"
+                            :key="index"
+                            class="singer"
+                            @click="openSinger(item.singer_mid, item.singer_name)"
+                        >
+                            <img
+                                v-lazy="{
+                                    src: item.singer_avatar,
+                                    error: defaultImg,
+                                    loading: defaultImg
+                                }"
+                                class="avatar"
+                            />
+                            <div class="info">
+                                <div class="name f-name">{{item.singer_name}}</div>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+                    <Empty v-if="!singerlist.length && loaded"></Empty>
                 </div>
             </vue-app-scroller>
         </div>
@@ -97,9 +104,8 @@ export default {
     name: 'singer',
     data() {
         return {
-            init: true,
-            ready: false,
-            loaded: true,
+            init: false,
+            loaded: false,
             // 路由使用
             singerlist: [],
             tags: {},
@@ -113,15 +119,23 @@ export default {
             defaultImg: require('@/assets/images/singer.png')
         };
     },
-    mounted() {
-        this.getData();
-    },
     methods: {
+        initScrollWidth(dom) {
+            let areaList = this.$refs[dom].children;
+            let width = 0;
+            Array.from(areaList).forEach(item => {
+                width += item.getBoundingClientRect().width;
+            });
+            this.$refs[dom].style.width = `${width}px`;
+        },
         openSinger(mid, name) {
-            this.$vueAppEffect.next({
+            this.$VueAppEffect.next({
                 path: `/pages/SingerDetail/index`,
                 params: { mid: mid, name: name }
             });
+        },
+        loadData(done) {
+            this.getData(done);
         },
         // 点击切换类目 重置 各种数据
         sexChange(id) {
@@ -138,52 +152,26 @@ export default {
         },
         changeSetData(id, str) {
             if (id === this[str]) {
-                return false;
+                return;
             }
-            this.scrollTop = 0;
             this.singerlist = [];
             this[str] = id;
             this.sin = 0;
-            this.cur_page = 1;
-            this.getData();
-        },
-        initScrollWidth(dom) {
-            let areaList = this.$refs[dom].children;
-            let width = 0;
-            Array.from(areaList).forEach(item => {
-                width += item.getBoundingClientRect().width;
-            });
-            this.$refs[dom].style.width = `${width}px`;
-        },
-        onReachBottom(done) {
-            if (this.total === this.singerlist.length) {
-                done();
-                return;
-            } else {
-                let timer = setTimeout(() => {
-                    this.getData();
-                    clearTimeout(timer);
-                }, 800);
-            }
+            this.page = 1;
+            this.$refs.scroll.load();
         },
         onPullRefresh(done) {
+            this.loaded = false;
             this.sin = 0;
             this.page = 1;
             this.singerlist = [];
-            setTimeout(() => {
+            let t = setTimeout(() => {
                 this.getData(done);
-            }, 500);
-        },
-        onLoadMore(done) {
-            setTimeout(() => {
-                this.getData(done);
+                clearTimeout(t);
             }, 500);
         },
         // 获取数据
         getData(done) {
-            if (!this.loaded) {
-                return;
-            }
             this.loaded = false;
             singerList({
                 picSize: 150,
@@ -194,7 +182,6 @@ export default {
                 sin: this.sin,
                 cur_page: this.page
             }).then(res => {
-                done && done();
                 this.total = res.total;
                 let singerarr = res.list;
                 // 合并数组
@@ -209,16 +196,19 @@ export default {
                 this.singerlist = singerlist;
                 this.sin = this.sin + 80;
                 this.page = this.page + 1;
-                this.ready = true;
-                this.loaded = true;
 
-                if (this.init) {
+                let end = this.singerlist.length === this.total;
+                let empty = this.singerlist.length === 0;
+                this.loaded = true;
+                done && done(end, empty);
+
+                if (!this.init) {
                     let timer = setTimeout(() => {
                         this.initScrollWidth('genres');
                         this.initScrollWidth('areas');
                         this.initScrollWidth('sexs');
                         clearTimeout(timer);
-                        this.init = false;
+                        this.init = true;
                     }, 30);
                 }
             });
