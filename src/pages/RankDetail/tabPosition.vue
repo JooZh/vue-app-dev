@@ -36,18 +36,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+/*ios使用sticky样式实现*/
+.tab.nav-sticky-ios{
+    z-index: 9999;/*需设置zIndex,避免在悬停时,可能会被列表数据遮住*/
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;/*相对mescroll的div悬停的位置*/
+}
+/*android和pc端悬停*/
+.nav-sticky-android{
+    z-index: 9999;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    width: 100%;
+}
 .tab
   width: 100%;
   height 40px
   position: relative;
   .tab-list
-    background: transparent;
+    background: #252525;
     width: 100%;
     display: flex;
     line-height: 40px;
-    position: absolute;
-    top: 0;
-    left: 0
+    height 40px
     &.fixed
       position: fixed;
       top: 40px;

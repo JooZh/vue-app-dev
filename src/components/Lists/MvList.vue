@@ -1,6 +1,6 @@
 <template>
     <div id="mvlist" class="mvlist">
-        <div v-for="(item, index) in data" :key="index" class="list">
+        <div v-for="(item, index) in data" :key="item.mv_mid" class="list">
             <div class="detail" @click="getPlay(index)">
                 <img
                     ref="img"

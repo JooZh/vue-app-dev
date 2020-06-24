@@ -1,15 +1,15 @@
 <template>
-    <PageLoadView
-        isTab
-        :onScroll="onScroll"
-        :onLoadData="loadData"
-        :onPullRefresh="onPullRefresh"
-    >
-        <div v-if="load" class="container">
-            <!-- <Swiper :items="imageList"></!-->
-            <Mvlist v-if="mvlist.length" :data="mvlist"></Mvlist>
-            <Empty v-else></Empty>
-        </div>
+    <PageLoadView isTab>
+        <vue-mescroller
+            :loadDataCallBack="loadData"
+            :getData="getData"
+            :dataHandle="dataHandle"
+            :enableRefresh="true"
+            :autoRefresh="true"
+            :enablePagination="false"
+        >
+            <Mvlist :data="mvlist"></Mvlist>
+        </vue-mescroller>
     </PageLoadView>
 </template>
 
@@ -23,37 +23,18 @@ export default {
     },
     data() {
         return {
-            load: false,
-            // 路由使用
-            headerTitle: '推荐',
-            imageList: [],
             mvlist: [],
-            // 滑动控制
-            current: 0,
-            timer: null,
-            startX: 0,
-            startY: 0
         };
     },
     methods: {
-        onScroll(e) {
-            // console.log(e);
+        loadData() {
+            return recommendMvList();
         },
-        onPullRefresh(done) {
-            setTimeout(() => {
-                this.getData(done);
-            }, 500);
+        dataHandle(data) {
+            return data.mv_list;
         },
-        loadData(done) {
-            this.getData(done);
-        },
-        getData(done) {
-            recommendMvList().then(res => {
-                this.mvlist = res.mv_list;
-                // this.mvlist = [];
-                this.load = true;
-                done && done(true, !this.mvlist.length);
-            });
+        getData(data) {
+            this.mvlist = data;
         }
     }
 };

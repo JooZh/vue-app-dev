@@ -1,37 +1,41 @@
 <template>
-    <PageLoadView
-        isTab
-        :onLoadData="loadData"
-        :onPullRefresh="onPullRefresh"
-    >
-        <div class="container">
-            <div v-for="(item, index) in toplist" :key="index" class="list-warpper">
-                <div
-                    class="list"
-                    @click="goDetail(item.top_id, item.top_title, item.top_pic)"
-                >
-                    <div class="img"><img :src="item.top_pic" /></div>
-                    <div class="info">
-                        <div class="title text-line">
-                            <span class="pix">{{item.top_title}}</span>
-                        </div>
-                        <div
-                            v-for="(value, key) in item.song_list"
-                            :key="key"
-                            class="name-list text-line"
-                        >
-                            <div class="pix">
-                                {{key + 1}}<span class="color-h"> {{value.song_name}}</span> -
-                                {{value.singer_name}}
+    <PageLoadView isTab>
+        <vue-mescroller
+            :loadDataCallBack="loadData"
+            :getData="getData"
+            :enableRefresh="true"
+            :autoRefresh="true"
+            :enablePagination="false"
+        >
+            <div class="container">
+                <div v-for="(item) in toplist" :key="item.top_id" class="list-warpper">
+                    <div
+                        class="list"
+                        @click="goDetail(item.top_id, item.top_title, item.top_pic)"
+                    >
+                        <div class="img"><img :src="item.top_pic" /></div>
+                        <div class="info">
+                            <div class="title text-line">
+                                <span class="pix">{{item.top_title}}</span>
+                            </div>
+                            <div
+                                v-for="(value, key) in item.song_list"
+                                :key="key"
+                                class="name-list text-line"
+                            >
+                                <div class="pix">
+                                    {{key + 1}}<span class="color-h"> {{value.song_name}}</span> -
+                                    {{value.singer_name}}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="right">
-                        <div class="v"></div>
+                        <div class="right">
+                            <div class="v"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </vue-mescroller>
     </PageLoadView>
 </template>
 
@@ -45,13 +49,11 @@ export default {
         };
     },
     methods: {
-        loadData(done) {
-            this.getData(done);
+        loadData() {
+            return topList();
         },
-        onPullRefresh(done) {
-            setTimeout(() => {
-                this.getData(done);
-            }, 500);
+        getData(data) {
+            this.toplist = data;
         },
         goDetail(id, title, img) {
             this.$VueAppEffect.next({
@@ -61,12 +63,6 @@ export default {
                     title: title,
                     img: img
                 }
-            });
-        },
-        getData(done) {
-            topList().then(res => {
-                this.toplist = res;
-                done && done(true, false);
             });
         }
     }

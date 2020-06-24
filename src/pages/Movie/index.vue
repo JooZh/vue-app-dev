@@ -1,5 +1,5 @@
 <template>
-    <vue-app-mescroller
+    <vue-app-scroller
         :onLoadData="loadMore"
         :onScroll="onScroll"
         :onPullRefresh="refresh"
@@ -15,7 +15,7 @@
             </div>
         </div>
         <!-- <div slot="footer">2323</div> -->
-    </vue-app-mescroller>
+    </vue-app-scroller>
 </template>
 <script>
 export default {

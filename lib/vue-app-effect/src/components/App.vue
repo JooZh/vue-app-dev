@@ -29,6 +29,7 @@ export default {
             this.Direction = direction;
         });
         this.$VueAppEffect.on('reverse', direction => {
+            // document.querySelector('.vue-app-effect__sub-router-view').style.overflow = 'hidden';
             this.Direction = direction;
         });
     }

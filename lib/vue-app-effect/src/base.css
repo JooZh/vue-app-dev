@@ -10,23 +10,22 @@
   top: 0;
   position: absolute;
   backface-visibility: hidden;
-  perspective: 1000;
 }
 .vue-app-effect-out-enter {
   opacity: 0;
-  transform: translate3d(-70%, 0, 0);
+  transform: translateX(-70%);
 }
 .vue-app-effect-out-leave-active {
   opacity: 0 ;
-  transform: translate3d(70%, 0, 0);
+  transform: translateX(70%);
 }
 .vue-app-effect-in-enter {
   opacity: 0;
-  transform: translate3d(70%, 0, 0);
+  transform: translateX(70%);
 }
 .vue-app-effect-in-leave-active {
   opacity: 0;
-  transform: translate3d(-70%, 0, 0);
+  transform: translateX(-70%);
 }
 
 /*** 布局css ***/
